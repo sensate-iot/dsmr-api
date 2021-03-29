@@ -1,0 +1,50 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30709.132
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SensateIoT.SmartEnergy.Dsmr.Api", "SensateIoT.SmartEnergy.Dsmr.Api\SensateIoT.SmartEnergy.Dsmr.Api.csproj", "{389DA334-E2F6-485F-B72A-A6B7436662D5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SensateIoT.SmartEnergy.Dsmr.DataAccess", "SensateIoT.SmartEnergy.Dsmr.DataAccess\SensateIoT.SmartEnergy.Dsmr.DataAccess.csproj", "{DAABD99B-EC1C-47EF-BFC7-87ADB8A85527}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SensateIoT.SmartEnergy.Dsmr.Data", "SensateIoT.SmartEnergy.Dsmr.Data\SensateIoT.SmartEnergy.Dsmr.Data.csproj", "{7758165E-758A-4535-90FD-5E2759C02183}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F6455E1D-414A-41A4-B2F1-8E3E56BC1C24}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		CHANGELOG.md = CHANGELOG.md
+		CODE_OF_CONDUCT.md = CODE_OF_CONDUCT.md
+		CODESTYLE.md = CODESTYLE.md
+		CONTRIBUTING.md = CONTRIBUTING.md
+		COPYING = COPYING
+		README.md = README.md
+		SECURITY.md = SECURITY.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{389DA334-E2F6-485F-B72A-A6B7436662D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{389DA334-E2F6-485F-B72A-A6B7436662D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{389DA334-E2F6-485F-B72A-A6B7436662D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{389DA334-E2F6-485F-B72A-A6B7436662D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DAABD99B-EC1C-47EF-BFC7-87ADB8A85527}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAABD99B-EC1C-47EF-BFC7-87ADB8A85527}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAABD99B-EC1C-47EF-BFC7-87ADB8A85527}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAABD99B-EC1C-47EF-BFC7-87ADB8A85527}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7758165E-758A-4535-90FD-5E2759C02183}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7758165E-758A-4535-90FD-5E2759C02183}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7758165E-758A-4535-90FD-5E2759C02183}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7758165E-758A-4535-90FD-5E2759C02183}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A4A7E575-F2E3-4F13-B9BF-E0580C848BA4}
+	EndGlobalSection
+EndGlobal

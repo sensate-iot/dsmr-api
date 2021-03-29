@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DTO\EnergyDataPoint.cs" />
+    <Compile Include="DTO\Granularity.cs" />
     <Compile Include="Models\DataPoint.cs" />
     <Compile Include="Models\EnergyDataPoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

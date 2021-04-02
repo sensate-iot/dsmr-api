@@ -39,7 +39,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 
 			return this.Ok(new Response<IEnumerable<EnergyDataPoint>> {
 		        Data = await this.m_olap
-			        .LookupEnergyDataPerHourAsync(sensorId, start.Value.ToUniversalTime(), end.Value.ToUniversalTime(), CancellationToken.None)
+			        .LookupPowerDataPerHourAsync(sensorId, start.Value.ToUniversalTime(), end.Value.ToUniversalTime(), CancellationToken.None)
 			        .ConfigureAwait(false)
 	        });
         }

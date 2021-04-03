@@ -4,7 +4,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using SensateIoT.SmartEnergy.Dsmr.Data.DTO;
+
 using SensateIoT.SmartEnergy.Dsmr.Data.Models;
 using SensateIoT.SmartEnergy.Dsmr.Data.Settings;
 using SensateIoT.SmartEnergy.Dsmr.DataAccess.Abstract;
@@ -19,6 +19,9 @@ namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories
 		private const string DsmrApi_SelectHourlyPowerData = "DsmrApi_SelectHourlyPowerData";
 		private const string DsmrApi_SelectHourlyEnvData = "DsmrApi_SelectHourlyEnvironmentDataAverages";
 		private const string DsmrApi_SelectLastData = "DsmrApi_SelectLastData";
+
+		private const string DsmrApi_SelectPowerDailyAverages = "DsmrApi_SelectPowerDailyAverages";
+		private const string DsmrApi_SelectEnvironmentDailyAverages = "DsmrApi_SelectEnvironmentDailyAverages";
 
 		public OlapRepository(AppSettings settings) : base(new SqlConnection(settings.OlapConnectionString))
 		{
@@ -42,7 +45,17 @@ namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories
 
 		public async Task<IEnumerable<EnergyDataPoint>> LookupPowerDataPerDayAsync(int sensorId, DateTime start, DateTime end, CancellationToken ct)
 		{
-			throw new NotImplementedException();
+			var energyData = await this.QueryAsync<EnergyDailyAggregate>(DsmrApi_SelectPowerDailyAverages,
+				"@sensorId", sensorId,
+				"@start", start,
+				"@end", end).ConfigureAwait(false);
+
+			return energyData.Select(x => new EnergyDataPoint {
+				Timestamp = x.Date,
+				EnergyProduction = x.EnergyProduction,
+				EnergyUsage = x.EnergyUsage,
+				GasFlow = x.GasFlow
+			});
 		}
 
 		public async Task<IEnumerable<EnvironmentDataPoint>> LookupEnvironmentDataPerHourAsync(int sensorId, DateTime start, DateTime end, CancellationToken ct)
@@ -63,7 +76,18 @@ namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories
 
 		public async Task<IEnumerable<EnvironmentDataPoint>> LookupEnvironmentDataPerDayAsync(int sensorId, DateTime start, DateTime end, CancellationToken ct)
 		{
-			throw new NotImplementedException();
+			var energyData = await this.QueryAsync<EnvironmentDailyAggregate>(DsmrApi_SelectEnvironmentDailyAverages,
+				"@sensorId", sensorId,
+				"@start", start,
+				"@end", end).ConfigureAwait(false);
+
+			return energyData.Select(x => new EnvironmentDataPoint {
+				Timestamp = x.Date,
+				InsideTemperature = x.InsideTemperature,
+				OutsideAirTemperature = x.OutsideAirTemperature,
+				Pressure = x.Pressure,
+				RH = x.RH
+			});
 		}
 
 		public async Task<DataPoint> LookupLastDataPointAsync(int sensorId, CancellationToken ct)

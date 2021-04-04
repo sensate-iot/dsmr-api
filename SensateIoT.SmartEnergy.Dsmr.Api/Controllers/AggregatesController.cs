@@ -38,9 +38,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 	        }
 
 			return this.Ok(new Response<IEnumerable<EnergyDataPoint>> {
-		        Data = await this.m_olap
-			        .LookupPowerDataPerHourAsync(sensorId, start.Value.ToUniversalTime(), end.Value.ToUniversalTime(), CancellationToken.None)
-			        .ConfigureAwait(false)
+				Data = await this.GetEnergyDataAsync(sensorId, start.Value, end.Value, granularity, CancellationToken.None).ConfigureAwait(false)
 	        });
         }
 
@@ -51,6 +49,24 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 	        return this.Ok(new Response<DataPoint> {
 				Data = await this.m_olap.LookupLastDataPointAsync(sensorId, CancellationToken.None).ConfigureAwait(false)
 	        });
+        }
+
+        private async Task<IEnumerable<EnergyDataPoint>> GetEnergyDataAsync(int id, DateTime start, DateTime end, Granularity g, CancellationToken ct)
+        {
+	        IEnumerable<EnergyDataPoint> values;
+
+	        switch(g) {
+	        case Granularity.Hour:
+		        values = await this.m_olap.LookupPowerDataPerHourAsync(id, start, end, ct).ConfigureAwait(false);
+		        break;
+	        case Granularity.Day:
+		        values = await this.m_olap.LookupPowerDataPerDayAsync(id, start, end, ct).ConfigureAwait(false);
+		        break;
+	        default:
+		        throw new ArgumentOutOfRangeException(nameof(g), g, null);
+	        }
+
+	        return values;
         }
     }
 }

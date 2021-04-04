@@ -2,6 +2,7 @@
 {
 	public enum Granularity
 	{
+		Day,
 		Hour,
 		Minute
 	}

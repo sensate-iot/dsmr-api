@@ -16,7 +16,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories
 {
 	public sealed class OlapRepository : AbstractRepository, IOlapRepository
 	{
-		private const string DsmrApi_SelectHourlyPowerData = "DsmrApi_SelectHourlyPowerData";
+		private const string DsmrApi_SelectHourlyPowerData = "DsmrApi_SelectHourlyPowerDataAverages";
 		private const string DsmrApi_SelectHourlyEnvData = "DsmrApi_SelectHourlyEnvironmentDataAverages";
 		private const string DsmrApi_SelectLastData = "DsmrApi_SelectLastData";
 
@@ -38,14 +38,13 @@ namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories
 				Timestamp = createTimestamp(x.Date, x.Hour),
 				EnergyProduction = x.EnergyProduction,
 				EnergyUsage = x.EnergyUsage,
-				GasFlow = x.GasFlow,
-				InsideTemperature = x.InsideTemperature
+				GasFlow = x.GasFlow
 			});
 		}
 
 		public async Task<IEnumerable<EnergyDataPoint>> LookupPowerDataPerDayAsync(int sensorId, DateTime start, DateTime end, CancellationToken ct)
 		{
-			var energyData = await this.QueryAsync<EnergyDailyAggregate>(DsmrApi_SelectPowerDailyAverages,
+			var energyData = await this.QueryAsync<Data.Models.EnergyDataPoint>(DsmrApi_SelectPowerDailyAverages,
 				"@sensorId", sensorId,
 				"@start", start,
 				"@end", end).ConfigureAwait(false);

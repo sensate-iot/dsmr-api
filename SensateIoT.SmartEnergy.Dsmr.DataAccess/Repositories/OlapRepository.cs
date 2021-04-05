@@ -5,6 +5,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using JetBrains.Annotations;
+
 using SensateIoT.SmartEnergy.Dsmr.Data.Models;
 using SensateIoT.SmartEnergy.Dsmr.Data.Settings;
 using SensateIoT.SmartEnergy.Dsmr.DataAccess.Abstract;
@@ -14,11 +16,14 @@ using EnvironmentDataPoint = SensateIoT.SmartEnergy.Dsmr.Data.DTO.EnvironmentDat
 
 namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories
 {
+	[UsedImplicitly]
 	public sealed class OlapRepository : AbstractRepository, IOlapRepository
 	{
 		private const string DsmrApi_SelectHourlyPowerData = "DsmrApi_SelectHourlyPowerDataAverages";
 		private const string DsmrApi_SelectHourlyEnvData = "DsmrApi_SelectHourlyEnvironmentDataAverages";
 		private const string DsmrApi_SelectLastData = "DsmrApi_SelectLastData";
+		private const string DsmrApi_SelectWeeklyHigh = "DsmrApi_SelectWeeklyHigh";
+		private const string DsmrApi_SelectDataPoints = "DsmrApi_SelectDataPoints";
 
 		private const string DsmrApi_SelectPowerDailyAverages = "DsmrApi_SelectPowerDailyAverages";
 		private const string DsmrApi_SelectEnvironmentDailyAverages = "DsmrApi_SelectEnvironmentDailyAverages";
@@ -89,22 +94,59 @@ namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories
 			});
 		}
 
-		public async Task<DataPoint> LookupLastDataPointAsync(int sensorId, CancellationToken ct)
+		public async Task<Data.DTO.DataPoint> LookupLastDataPointAsync(int sensorId, CancellationToken ct)
 		{
-			var energyData = await this.QuerySingleAsync<DataPoint>(DsmrApi_SelectLastData,
+			var data = await this.QuerySingleAsync<DataPoint>(DsmrApi_SelectLastData,
 				"@sensorId", sensorId).ConfigureAwait(false);
 
-			return energyData;
+			return new Data.DTO.DataPoint {
+				EnergyProduction = data.EnergyProduction,
+				EnergyUsage = data.EnergyUsage,
+				GasFlow = data.GasFlow,
+				GasUsage = data.GasUsage,
+				OutsideAirTemperature = data.OutsideAirTemperature,
+				PowerProduction = data.PowerProduction,
+				PowerUsage = data.PowerUsage,
+				Pressure = data.Pressure,
+				RH = data.RH,
+				Temperature = data.Temperature,
+				Timestamp = data.Timestamp
+			};
 		}
 
-		public async Task<DataPoint> LookupWeeklyHighAsync(int sensorId, CancellationToken ct)
+		public async Task<Data.DTO.WeeklyHigh> LookupWeeklyHighAsync(int sensorId, CancellationToken ct)
 		{
-			throw new NotImplementedException();
+			var data = await this.QuerySingleAsync<WeeklyHigh>(DsmrApi_SelectWeeklyHigh,
+			                                                   "@sensorId", sensorId).ConfigureAwait(false);
+			return new Data.DTO.WeeklyHigh {
+				OutsideAirTemperature = data.Oat,
+				PowerProduction = data.PowerProduction,
+				PowerUsage = data.PowerUsage,
+				Temperature = data.Temperature,
+				GasFlow = data.GasFlow
+			};
 		}
 
-		public async Task<DataPoint> LookupDataPointsAsync(int sensorId, CancellationToken ct)
+		public async Task<IEnumerable<Data.DTO.DataPoint>> LookupDataPointsAsync(int sensorId, DateTime start, DateTime end, CancellationToken ct)
 		{
-			throw new NotImplementedException();
+			var data = await this.QueryAsync<DataPoint>(DsmrApi_SelectDataPoints,
+			                                            "@sensorId", sensorId,
+			                                            "@start", start,
+			                                            "@end", end).ConfigureAwait(false);
+
+			return data.Select(x => new Data.DTO.DataPoint {
+				EnergyProduction = x.EnergyProduction,
+				EnergyUsage = x.EnergyUsage,
+				GasFlow = x.GasFlow,
+				GasUsage = x.GasUsage,
+				OutsideAirTemperature = x.OutsideAirTemperature,
+				PowerProduction = x.PowerProduction,
+				PowerUsage = x.PowerUsage,
+				Pressure = x.Pressure,
+				RH = x.RH,
+				Temperature = x.Temperature,
+				Timestamp = x.Timestamp
+			});
 		}
 
 		private static DateTime createTimestamp(DateTime timestamp, int hour)

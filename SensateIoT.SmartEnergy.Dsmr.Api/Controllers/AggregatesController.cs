@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using System.Web.Http;
 
 using SensateIoT.SmartEnergy.Dsmr.Api.Data;
+using SensateIoT.SmartEnergy.Dsmr.Api.Exceptions;
+using SensateIoT.SmartEnergy.Dsmr.Api.Middleware;
 using SensateIoT.SmartEnergy.Dsmr.Data.DTO;
 using SensateIoT.SmartEnergy.Dsmr.DataAccess.Abstract;
 
@@ -23,6 +25,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 	    }
 
         [HttpGet]
+		[ExceptionHandling]
 		[Route("power/{sensorId}")]
         public async Task<IHttpActionResult> GetPowerAggregatesAsync(int sensorId, DateTime? start = null, DateTime? end = null, Granularity granularity = Granularity.Hour)
         {
@@ -49,6 +52,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
         }
 
         [HttpGet]
+		[ExceptionHandling]
 		[Route("environment/{sensorId}")]
         public async Task<IHttpActionResult> GetEnvironmentAggregatesAsync(int sensorId, DateTime? start = null, DateTime? end = null, Granularity granularity = Granularity.Hour)
         {
@@ -75,6 +79,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
         }
 
         [HttpGet]
+		[ExceptionHandling]
         [Route("weekly-high/{sensorId}")]
         public async Task<IHttpActionResult> GetWeeklyHighAsync(int sensorId)
         {
@@ -86,6 +91,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
         }
 
         [HttpGet]
+		[ExceptionHandling]
         [Route("latest/{sensorId}")]
         public async Task<IHttpActionResult> LatestAsync(int sensorId)
         {
@@ -109,7 +115,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 		        values = await this.m_olap.LookupEnvironmentDataPerDayAsync(id, start, end, ct).ConfigureAwait(false);
 		        break;
 	        default:
-		        throw new ArgumentOutOfRangeException(nameof(g), g, null);
+				throw new InvalidQueryArgumentException("granularity", "Supported granularity: hour, day");
 	        }
 
 	        return values;
@@ -127,7 +133,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 		        values = await this.m_olap.LookupPowerDataPerDayAsync(id, start, end, ct).ConfigureAwait(false);
 		        break;
 	        default:
-		        throw new ArgumentOutOfRangeException(nameof(g), g, null);
+				throw new InvalidQueryArgumentException("granularity", "Supported granularity: hour, day");
 	        }
 
 	        return values;

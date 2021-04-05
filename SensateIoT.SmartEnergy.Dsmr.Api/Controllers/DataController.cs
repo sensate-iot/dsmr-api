@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
+
 using SensateIoT.SmartEnergy.Dsmr.Api.Data;
+using SensateIoT.SmartEnergy.Dsmr.Api.Middleware;
 using SensateIoT.SmartEnergy.Dsmr.Data.DTO;
 using SensateIoT.SmartEnergy.Dsmr.DataAccess.Abstract;
 
@@ -20,6 +22,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 	    }
 
 	    [HttpGet]
+		[ExceptionHandling]
 	    [Route("{sensorId}")]
 	    public async Task<IHttpActionResult> GetPowerAggregatesAsync(int sensorId, DateTime? start = null,
 	                                                                 DateTime? end = null)

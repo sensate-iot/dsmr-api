@@ -48,6 +48,7 @@
     <Compile Include="DTO\EnergyDataPoint.cs" />
     <Compile Include="DTO\EnvironmentDataPoint.cs" />
     <Compile Include="DTO\Granularity.cs" />
+    <Compile Include="DTO\Tariff.cs" />
     <Compile Include="DTO\WeeklyHigh.cs" />
     <Compile Include="Models\DataPoint.cs" />
     <Compile Include="Models\EnergyDailyAggregate.cs" />

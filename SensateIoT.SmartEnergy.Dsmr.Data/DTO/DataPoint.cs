@@ -1,5 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace SensateIoT.SmartEnergy.Dsmr.Data.DTO
 {
@@ -11,6 +12,9 @@ namespace SensateIoT.SmartEnergy.Dsmr.Data.DTO
 		public decimal PowerUsage { get; set; }
 		[JsonProperty("powerProduction")]
 		public decimal PowerProduction { get; set; }
+		[JsonProperty("tariff", NullValueHandling = NullValueHandling.Ignore)]
+		[JsonConverter(typeof(StringEnumConverter))]
+		public Tariff? Tariff { get; set; }
 		[JsonProperty("energyUsage")]
 		public decimal EnergyUsage { get; set; }
 		[JsonProperty("energyProduction")]

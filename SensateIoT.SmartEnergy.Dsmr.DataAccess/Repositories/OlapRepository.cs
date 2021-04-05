@@ -6,13 +6,14 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using JetBrains.Annotations;
-
+using SensateIoT.SmartEnergy.Dsmr.Data.DTO;
 using SensateIoT.SmartEnergy.Dsmr.Data.Models;
 using SensateIoT.SmartEnergy.Dsmr.Data.Settings;
 using SensateIoT.SmartEnergy.Dsmr.DataAccess.Abstract;
-
+using DataPoint = SensateIoT.SmartEnergy.Dsmr.Data.Models.DataPoint;
 using EnergyDataPoint = SensateIoT.SmartEnergy.Dsmr.Data.DTO.EnergyDataPoint;
 using EnvironmentDataPoint = SensateIoT.SmartEnergy.Dsmr.Data.DTO.EnvironmentDataPoint;
+using WeeklyHigh = SensateIoT.SmartEnergy.Dsmr.Data.Models.WeeklyHigh;
 
 namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories
 {
@@ -43,7 +44,8 @@ namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories
 				Timestamp = createTimestamp(x.Date, x.Hour),
 				EnergyProduction = x.EnergyProduction,
 				EnergyUsage = x.EnergyUsage,
-				GasFlow = x.GasFlow
+				GasFlow = x.GasFlow,
+				Tariff = x.Tariff == 1 ? Tariff.Normal : Tariff.Low
 			});
 		}
 
@@ -107,6 +109,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories
 				OutsideAirTemperature = data.OutsideAirTemperature,
 				PowerProduction = data.PowerProduction,
 				PowerUsage = data.PowerUsage,
+				Tariff = data.Tariff == 1 ? Tariff.Normal : Tariff.Low,
 				Pressure = data.Pressure,
 				RH = data.RH,
 				Temperature = data.Temperature,
@@ -139,6 +142,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories
 				EnergyUsage = x.EnergyUsage,
 				GasFlow = x.GasFlow,
 				GasUsage = x.GasUsage,
+				Tariff = x.Tariff == 1 ? Tariff.Normal : Tariff.Low,
 				OutsideAirTemperature = x.OutsideAirTemperature,
 				PowerProduction = x.PowerProduction,
 				PowerUsage = x.PowerUsage,

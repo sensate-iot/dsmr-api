@@ -24,7 +24,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 
         [HttpGet]
 		[Route("power/{sensorId}")]
-        public async Task<IHttpActionResult> GetPowerAggregatesAsync(int sensorId, DateTime? start, DateTime? end = null, Granularity granularity = Granularity.Hour)
+        public async Task<IHttpActionResult> GetPowerAggregatesAsync(int sensorId, DateTime? start = null, DateTime? end = null, Granularity granularity = Granularity.Hour)
         {
 	        var now = DateTime.UtcNow;
 
@@ -36,14 +36,21 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 				end = now.Date.AddDays(1).AddTicks(-1);
 	        }
 
-			return this.Ok(new Response<IEnumerable<EnergyDataPoint>> {
-				Data = await this.getPowerDataAsync(sensorId, start.Value, end.Value, granularity, CancellationToken.None).ConfigureAwait(false)
-	        });
+		    start = start.Value.ToUniversalTime();
+		    end = end.Value.ToUniversalTime();
+
+			var response = new Response<IEnumerable<EnergyDataPoint>>();
+			var data = await this
+				.getPowerDataAsync(sensorId, start.Value, end.Value, granularity, CancellationToken.None)
+				.ConfigureAwait(false);
+
+			response.Data = data;
+			return this.Ok(response);
         }
 
         [HttpGet]
 		[Route("environment/{sensorId}")]
-        public async Task<IHttpActionResult> GetEnvironmentAggregatesAsync(int sensorId, DateTime? start, DateTime? end = null, Granularity granularity = Granularity.Hour)
+        public async Task<IHttpActionResult> GetEnvironmentAggregatesAsync(int sensorId, DateTime? start = null, DateTime? end = null, Granularity granularity = Granularity.Hour)
         {
 	        var now = DateTime.UtcNow;
 
@@ -55,9 +62,16 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 				end = now.Date.AddDays(1).AddTicks(-1);
 	        }
 
-			return this.Ok(new Response<IEnumerable<EnvironmentDataPoint>> {
-				Data = await this.getEnvironmentDataAsync(sensorId, start.Value, end.Value, granularity, CancellationToken.None).ConfigureAwait(false)
-	        });
+		    start = start.Value.ToUniversalTime();
+		    end = end.Value.ToUniversalTime();
+
+			var response = new Response<IEnumerable<EnvironmentDataPoint>>();
+			var data = await this
+				.getEnvironmentDataAsync(sensorId, start.Value, end.Value, granularity, CancellationToken.None)
+				.ConfigureAwait(false);
+
+			response.Data = data;
+			return this.Ok(response);
         }
 
         [HttpGet]
@@ -75,9 +89,12 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
         [Route("latest/{sensorId}")]
         public async Task<IHttpActionResult> LatestAsync(int sensorId)
         {
-	        return this.Ok(new Response<DataPoint> {
-				Data = await this.m_olap.LookupLastDataPointAsync(sensorId, CancellationToken.None).ConfigureAwait(false)
-	        });
+	        var response = new Response<DataPoint> {
+		        Data = await this.m_olap.LookupLastDataPointAsync(sensorId, CancellationToken.None)
+			        .ConfigureAwait(false)
+	        };
+
+	        return this.Ok(response);
         }
 
         private async Task<IEnumerable<EnvironmentDataPoint>> getEnvironmentDataAsync(int id, DateTime start, DateTime end, Granularity g, CancellationToken ct)

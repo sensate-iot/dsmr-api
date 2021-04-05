@@ -11,6 +11,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api
         {
             config.MapHttpAttributeRoutes();
 
+			config.MessageHandlers.Add(new RequestLoggingMiddleware());
 			config.MessageHandlers.Add(new AuthenticationMiddleware());
 
             config.Formatters.JsonFormatter.SupportedMediaTypes

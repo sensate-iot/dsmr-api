@@ -66,12 +66,12 @@ namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories
 
 		public async Task<IEnumerable<EnvironmentDataPoint>> LookupEnvironmentDataPerHourAsync(int sensorId, DateTime start, DateTime end, CancellationToken ct)
 		{
-			var energyData = await this.QueryAsync<Data.Models.EnvironmentDataPoint>(DsmrApi_SelectHourlyEnvData,
+			var envData = await this.QueryAsync<Data.Models.EnvironmentDataPoint>(DsmrApi_SelectHourlyEnvData,
 				"@sensorId", sensorId,
 				"@start", start,
 				"@end", end).ConfigureAwait(false);
 
-			return energyData.Select(x => new EnvironmentDataPoint {
+			return envData.Select(x => new EnvironmentDataPoint {
 				Timestamp = createTimestamp(x.Date, x.Hour),
 				InsideTemperature = x.InsideTemperature,
 				OutsideAirTemperature = x.OutsideAirTemperature,
@@ -82,12 +82,12 @@ namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories
 
 		public async Task<IEnumerable<EnvironmentDataPoint>> LookupEnvironmentDataPerDayAsync(int sensorId, DateTime start, DateTime end, CancellationToken ct)
 		{
-			var energyData = await this.QueryAsync<EnvironmentDailyAggregate>(DsmrApi_SelectEnvironmentDailyAverages,
+			var envData = await this.QueryAsync<EnvironmentDailyAggregate>(DsmrApi_SelectEnvironmentDailyAverages,
 				"@sensorId", sensorId,
 				"@start", start,
 				"@end", end).ConfigureAwait(false);
 
-			return energyData.Select(x => new EnvironmentDataPoint {
+			return envData.Select(x => new EnvironmentDataPoint {
 				Timestamp = x.Date,
 				InsideTemperature = x.InsideTemperature,
 				OutsideAirTemperature = x.OutsideAirTemperature,
@@ -100,6 +100,10 @@ namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories
 		{
 			var data = await this.QuerySingleAsync<DataPoint>(DsmrApi_SelectLastData,
 				"@sensorId", sensorId).ConfigureAwait(false);
+
+			if(data == null) {
+				return null;
+			}
 
 			return new Data.DTO.DataPoint {
 				EnergyProduction = data.EnergyProduction,
@@ -121,6 +125,11 @@ namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories
 		{
 			var data = await this.QuerySingleAsync<WeeklyHigh>(DsmrApi_SelectWeeklyHigh,
 			                                                   "@sensorId", sensorId).ConfigureAwait(false);
+
+			if(data == null) {
+				return null;
+			}
+
 			return new Data.DTO.WeeklyHigh {
 				OutsideAirTemperature = data.Oat,
 				PowerProduction = data.PowerProduction,

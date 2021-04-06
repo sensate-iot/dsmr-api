@@ -22,6 +22,10 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Middleware
 		{
 			logger.Info("Verifying product token.");
 
+			if(request.RequestUri.PathAndQuery.Contains("swagger")) {
+				return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+			}
+
 			if(!request.Headers.TryGetValues("X-ProductToken", out var values)) {
 				logger.Info("No product token found!");
 				return this.respondWithError("Product token missing.", HttpStatusCode.Unauthorized);

@@ -1,6 +1,9 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Web;
+
+using SensateIoT.SmartEnergy.Dsmr.Api;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
@@ -24,6 +27,7 @@ using System.Runtime.InteropServices;
 
 // Automatically load log4net configuration from App.config
 [assembly: log4net.Config.XmlConfigurator]
+[assembly: PreApplicationStartMethod(typeof(SwaggerConfig), "Register")]
 
 // Version information for an assembly consists of the following four values:
 //

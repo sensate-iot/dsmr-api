@@ -83,6 +83,10 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Middleware
 
 		private async Task logResponse(HttpResponseMessage response)
 		{
+			if(response.Content == null) {
+				return;
+			}
+
 			using(var stream = this.m_manager.GetStream()) {
 				await response.Content.CopyToAsync(stream).ConfigureAwait(false);
 				var body = readStreamInChunks(stream);

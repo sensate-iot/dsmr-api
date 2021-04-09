@@ -10,7 +10,9 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api
 		public static AppSettings Load()
 		{
 			return new AppSettings {
-				OlapConnectionString = ConfigurationManager.ConnectionStrings["olap"]?.ConnectionString ??
+				OlapConnectionString = ConfigurationManager.ConnectionStrings["Olap"]?.ConnectionString ??
+				                       throw new InvalidOperationException("OLAP connection string not configured"),
+				DsmrProductConnectionString = ConfigurationManager.ConnectionStrings["DsmrProduct"]?.ConnectionString ??
 				                       throw new InvalidOperationException("OLAP connection string not configured")
 			};
 		}

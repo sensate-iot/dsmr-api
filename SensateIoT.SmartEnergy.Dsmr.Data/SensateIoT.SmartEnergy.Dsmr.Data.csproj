@@ -48,6 +48,7 @@
     <Compile Include="DTO\EnergyDataPoint.cs" />
     <Compile Include="DTO\EnvironmentDataPoint.cs" />
     <Compile Include="DTO\Granularity.cs" />
+    <Compile Include="Models\ProductToken.cs" />
     <Compile Include="DTO\Tariff.cs" />
     <Compile Include="DTO\WeeklyHigh.cs" />
     <Compile Include="Models\DataPoint.cs" />
@@ -55,6 +56,7 @@
     <Compile Include="Models\EnergyDataPoint.cs" />
     <Compile Include="Models\EnvironmentDailyAggregate.cs" />
     <Compile Include="Models\EnvironmentDataPoint.cs" />
+    <Compile Include="Models\User.cs" />
     <Compile Include="Models\WeeklyHigh.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Settings\AppSettings.cs" />

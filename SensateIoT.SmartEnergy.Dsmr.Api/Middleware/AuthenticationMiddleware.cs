@@ -10,13 +10,20 @@ using log4net;
 using Newtonsoft.Json;
 
 using SensateIoT.SmartEnergy.Dsmr.Api.Data;
+using SensateIoT.SmartEnergy.Dsmr.DataAccess.Abstract;
 
 namespace SensateIoT.SmartEnergy.Dsmr.Api.Middleware
 {
 	public class AuthenticationMiddleware : DelegatingHandler
 	{
 		private static readonly ILog logger = LogManager.GetLogger(nameof(AuthenticationMiddleware));
-		private static readonly Guid staticToken = Guid.Parse("2460ecea-78be-4e87-b913-c713a43184ef");
+
+		private readonly IAuthenticationRepository m_repo;
+
+		public AuthenticationMiddleware(IAuthenticationRepository repo)
+		{
+			this.m_repo = repo;
+		}
 
 		protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
 		{
@@ -33,8 +40,9 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Middleware
 
 			var token = values.First();
 			logger.Debug("Found product token: " + token);
+			var verify = await this.verifyToken(token, cancellationToken).ConfigureAwait(false);
 
-			if(!this.verifyToken(token)) {
+			if(!verify) {
 				logger.Info("Product token invalid. Stopping.");
 				return this.respondWithError("Unable to authenticate using product token.", HttpStatusCode.Unauthorized);
 			}
@@ -55,13 +63,15 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Middleware
 			};
 		}
 
-		private bool verifyToken(string token)
+		private async Task<bool> verifyToken(string token, CancellationToken ct)
 		{
 			if(!Guid.TryParse(token, out var uuid)) {
 				return false;
 			}
 
-			return uuid == staticToken;
+			var pt = await this.m_repo.GetProductTokenAsync(uuid, ct).ConfigureAwait(false);
+
+			return uuid == pt.Token;
 		}
 	}
 }

@@ -3,5 +3,6 @@
 	public class AppSettings
 	{
 		public string OlapConnectionString { get; set; }
+		public string DsmrProductConnectionString { get; set; }
 	}
 }

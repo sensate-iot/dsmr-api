@@ -2,7 +2,7 @@
 using System.Web.Http;
 
 using SensateIoT.SmartEnergy.Dsmr.Api.Middleware;
-using Swashbuckle.Application;
+using SensateIoT.SmartEnergy.Dsmr.DataAccess.Abstract;
 
 namespace SensateIoT.SmartEnergy.Dsmr.Api
 {
@@ -10,18 +10,21 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api
     {
         public static void Register(HttpConfiguration config)
         {
-            config.MapHttpAttributeRoutes();
-            config.MessageHandlers.Add(new RequestLoggingMiddleware());
-			config.MessageHandlers.Add(new AuthenticationMiddleware());
+	        var auth = GlobalConfiguration.Configuration.DependencyResolver.GetService(typeof(IAuthenticationRepository)) as IAuthenticationRepository;
+			//var auth = scope.GetService(typeof(IAuthenticationRepository)) as IAuthenticationRepository;
 
-            config.Formatters.JsonFormatter.SupportedMediaTypes
-	            .Add(new MediaTypeHeaderValue("text/html"));
+			config.MapHttpAttributeRoutes();
+			config.MessageHandlers.Add(new RequestLoggingMiddleware());
+			config.MessageHandlers.Add(new AuthenticationMiddleware(auth));
 
-            /*config.Routes.MapHttpRoute(
-                name: "DefaultApi",
-                routeTemplate: "dsmr/{controller}/{id}",
-                defaults: new { id = RouteParameter.Optional }
-            );*/
+			config.Formatters.JsonFormatter.SupportedMediaTypes
+				.Add(new MediaTypeHeaderValue("text/html"));
+
+	        /*config.Routes.MapHttpRoute(
+	            name: "DefaultApi",
+	            routeTemplate: "dsmr/{controller}/{id}",
+	            defaults: new { id = RouteParameter.Optional }
+	        );*/
         }
     }
 }

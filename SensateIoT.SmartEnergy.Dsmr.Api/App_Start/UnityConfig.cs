@@ -18,6 +18,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api
 
 			container.RegisterInstance(config);
 			container.RegisterType<IOlapRepository, OlapRepository>(new HierarchicalLifetimeManager());
+			container.RegisterType<IAuthenticationRepository, AuthenticationRepository>(new HierarchicalLifetimeManager());
 
             GlobalConfiguration.Configuration.DependencyResolver = new UnityDependencyResolver(container);
         }

@@ -48,11 +48,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Abstract\IAuthenticationRepository.cs" />
+    <Compile Include="Abstract\IDeviceRepository.cs" />
     <Compile Include="Converters\DateTimeHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Abstract\IOlapRepository.cs" />
     <Compile Include="Repositories\AbstractRepository.cs" />
     <Compile Include="Repositories\AuthenticationRepository.cs" />
+    <Compile Include="Repositories\DeviceRepository.cs" />
     <Compile Include="Repositories\OlapRepository.cs" />
   </ItemGroup>
   <ItemGroup>

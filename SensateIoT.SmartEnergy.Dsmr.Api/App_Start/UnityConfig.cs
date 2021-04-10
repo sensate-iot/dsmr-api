@@ -17,6 +17,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api
 			var config = ConfigurationLoader.Load();
 
 			container.RegisterInstance(config);
+			container.RegisterType<IDeviceRepository, DeviceRepository>(new HierarchicalLifetimeManager());
 			container.RegisterType<IOlapRepository, OlapRepository>(new HierarchicalLifetimeManager());
 			container.RegisterType<IAuthenticationRepository, AuthenticationRepository>(new HierarchicalLifetimeManager());
 

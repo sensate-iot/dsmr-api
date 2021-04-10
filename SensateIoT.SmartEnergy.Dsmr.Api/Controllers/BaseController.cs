@@ -1,5 +1,9 @@
-﻿using System.Web.Http;
-
+﻿using System.Net;
+using System.Net.Http;
+using System.Text;
+using System.Web.Http;
+using Newtonsoft.Json;
+using SensateIoT.SmartEnergy.Dsmr.Api.Data;
 using SensateIoT.SmartEnergy.Dsmr.Data.DTO;
 
 namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
@@ -23,6 +27,26 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 			}
 
 			return false;
+		}
+
+		protected void ThrowIfDeviceUnauthorized(int sensorId)
+		{
+	        var response = new Response<object>();
+
+	        if(this.AuthorizeDeviceForUser(sensorId, out var error)) {
+		        return;
+	        }
+
+	        response.AddError(error);
+	        response.AddError($"Device {sensorId} not authorized for the current user.");
+
+	        var msg = new HttpResponseMessage(HttpStatusCode.Unauthorized) {
+		        Content = new StringContent(JsonConvert.SerializeObject(response), Encoding.UTF8,
+		                                    "application/json"),
+		        ReasonPhrase = "Device not authorized for user"
+	        };
+
+	        throw new HttpResponseException(msg);
 		}
 
 		private bool verifyDevice(Device device, int deviceId, out string error)

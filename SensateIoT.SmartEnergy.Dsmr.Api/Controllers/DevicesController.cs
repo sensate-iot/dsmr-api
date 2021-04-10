@@ -1,24 +1,18 @@
 ﻿using System.Net;
 using System.Net.Http;
 using System.Text;
-using System.Threading.Tasks;
 using System.Web.Http;
 
 using Newtonsoft.Json;
 
 using SensateIoT.SmartEnergy.Dsmr.Api.Data;
 using SensateIoT.SmartEnergy.Dsmr.Data.DTO;
-using SensateIoT.SmartEnergy.Dsmr.DataAccess.Abstract;
 
 namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 {
 	[RoutePrefix("dsmr/v1/devices")]
 	public class DevicesController : BaseController
 	{
-		public DevicesController(IDeviceRepository repo)
-		{
-		}
-
 		[HttpGet]
 		[Route]
 		public  IHttpActionResult GetDevices()
@@ -44,10 +38,8 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 
 		private void throwUnauthorized(Response<object> response)
 		{
-
 			var msg = new HttpResponseMessage(HttpStatusCode.Unauthorized) {
-				Content = new StringContent(JsonConvert.SerializeObject(response), Encoding.UTF8,
-				                            "application/json"),
+				Content = new StringContent(JsonConvert.SerializeObject(response), Encoding.UTF8, "application/json"),
 				ReasonPhrase = "Device not authorized for user"
 			};
 

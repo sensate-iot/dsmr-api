@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
-
+using System.Web.Http.Results;
+using Newtonsoft.Json;
 using SensateIoT.SmartEnergy.Dsmr.Api.Data;
 using SensateIoT.SmartEnergy.Dsmr.Api.Exceptions;
 using SensateIoT.SmartEnergy.Dsmr.Api.Middleware;
@@ -15,7 +19,7 @@ using EnergyDataPoint = SensateIoT.SmartEnergy.Dsmr.Data.DTO.EnergyDataPoint;
 namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 {
 	[RoutePrefix("dsmr/v1/aggregates")]
-    public class AggregatesController : ApiController
+    public class AggregatesController : BaseController 
     {
 	    private readonly IOlapRepository m_olap;
 
@@ -95,10 +99,23 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
         [Route("latest/{sensorId}")]
         public async Task<IHttpActionResult> LatestAsync(int sensorId)
         {
-	        var response = new Response<DataPoint> {
-		        Data = await this.m_olap.LookupLastDataPointAsync(sensorId, CancellationToken.None)
-			        .ConfigureAwait(false)
-	        };
+	        var response = new Response<DataPoint>();
+
+	        if(!this.AuthorizeDeviceForUser(sensorId, out var error)) {
+				response.AddError(error);
+				response.AddError($"Device {sensorId} not authorized for the current user.");
+
+				var msg = new HttpResponseMessage(HttpStatusCode.Unauthorized) {
+					Content = new StringContent(JsonConvert.SerializeObject(response), Encoding.UTF8,
+					                            "application/json"),
+					ReasonPhrase = "Device not authorized for user"
+				};
+
+				throw new HttpResponseException(msg);
+	        }
+
+	        response.Data = await this.m_olap.LookupLastDataPointAsync(sensorId, CancellationToken.None)
+		        .ConfigureAwait(false);
 
 	        return this.Ok(response);
         }

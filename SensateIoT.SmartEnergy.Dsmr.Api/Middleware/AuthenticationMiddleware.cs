@@ -40,7 +40,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Middleware
 
 			var token = values.First();
 			logger.Debug("Found product token: " + token);
-			var verify = await this.verifyToken(token, cancellationToken).ConfigureAwait(false);
+			var verify = await this.verifyToken(request, token, cancellationToken).ConfigureAwait(false);
 
 			if(!verify) {
 				logger.Info("Product token invalid. Stopping.");
@@ -63,7 +63,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Middleware
 			};
 		}
 
-		private async Task<bool> verifyToken(string token, CancellationToken ct)
+		private async Task<bool> verifyToken(HttpRequestMessage message, string token, CancellationToken ct)
 		{
 			if(!Guid.TryParse(token, out var uuid)) {
 				return false;
@@ -71,7 +71,14 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Middleware
 
 			var pt = await this.m_repo.GetProductTokenAsync(uuid, ct).ConfigureAwait(false);
 
-			return uuid == pt.Token;
+			if(uuid != pt.Token) {
+				return false;
+			}
+
+			var user = await this.m_repo.GetUserAsync(pt.UserId, ct).ConfigureAwait(false);
+			message.Properties.Add("User", user);
+
+			return true;
 		}
 	}
 }

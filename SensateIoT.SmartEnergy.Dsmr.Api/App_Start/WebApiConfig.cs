@@ -11,7 +11,6 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api
         public static void Register(HttpConfiguration config)
         {
 	        var auth = GlobalConfiguration.Configuration.DependencyResolver.GetService(typeof(IAuthenticationRepository)) as IAuthenticationRepository;
-			//var auth = scope.GetService(typeof(IAuthenticationRepository)) as IAuthenticationRepository;
 
 			config.MapHttpAttributeRoutes();
 			config.MessageHandlers.Add(new RequestLoggingMiddleware());
@@ -19,12 +18,6 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api
 
 			config.Formatters.JsonFormatter.SupportedMediaTypes
 				.Add(new MediaTypeHeaderValue("text/html"));
-
-	        /*config.Routes.MapHttpRoute(
-	            name: "DefaultApi",
-	            routeTemplate: "dsmr/{controller}/{id}",
-	            defaults: new { id = RouteParameter.Optional }
-	        );*/
         }
     }
 }

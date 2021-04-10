@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Dapper;
@@ -19,7 +20,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories
 			this.m_disposed = false;
 		}
 
-		protected async Task<TValue> QuerySingleAsync<TValue>(string sproc, params object[] args)
+		protected async Task<TValue> QuerySingleAsync<TValue>(string sproc, CancellationToken ct, params object[] args)
 		{
 			this.VerifyDisposed();
 			this.VerifyConnection();
@@ -44,7 +45,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories
 			}
 		}
 
-		protected async Task<IEnumerable<TValue>> QueryAsync<TValue>(string sproc, params object[] args)
+		protected async Task<IEnumerable<TValue>> QueryAsync<TValue>(string sproc, CancellationToken ct, params object[] args)
 		{
 			this.VerifyDisposed();
 			this.VerifyConnection();

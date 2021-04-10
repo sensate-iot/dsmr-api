@@ -36,7 +36,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories
 
 		public async Task<IEnumerable<EnergyDataPoint>> LookupPowerDataPerHourAsync(int sensorId, DateTime start, DateTime end, CancellationToken ct)
 		{
-			var energyData = await this.QueryAsync<Data.Models.EnergyDataPoint>(DsmrApi_SelectHourlyPowerData,
+			var energyData = await this.QueryAsync<Data.Models.EnergyDataPoint>(DsmrApi_SelectHourlyPowerData, ct,
 				"@sensorId", sensorId,
 				"@start", start,
 				"@end", end).ConfigureAwait(false);
@@ -53,6 +53,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories
 		public async Task<IEnumerable<EnergyDataPoint>> LookupPowerDataPerDayAsync(int sensorId, DateTime start, DateTime end, CancellationToken ct)
 		{
 			var energyData = await this.QueryAsync<Data.Models.EnergyDataPoint>(DsmrApi_SelectPowerDailyAverages,
+				ct,
 				"@sensorId", sensorId,
 				"@start", start,
 				"@end", end).ConfigureAwait(false);
@@ -68,6 +69,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories
 		public async Task<IEnumerable<EnvironmentDataPoint>> LookupEnvironmentDataPerHourAsync(int sensorId, DateTime start, DateTime end, CancellationToken ct)
 		{
 			var envData = await this.QueryAsync<Data.Models.EnvironmentDataPoint>(DsmrApi_SelectHourlyEnvData,
+				ct,
 				"@sensorId", sensorId,
 				"@start", start,
 				"@end", end).ConfigureAwait(false);
@@ -84,6 +86,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories
 		public async Task<IEnumerable<EnvironmentDataPoint>> LookupEnvironmentDataPerDayAsync(int sensorId, DateTime start, DateTime end, CancellationToken ct)
 		{
 			var envData = await this.QueryAsync<EnvironmentDailyAggregate>(DsmrApi_SelectEnvironmentDailyAverages,
+				ct,
 				"@sensorId", sensorId,
 				"@start", start,
 				"@end", end).ConfigureAwait(false);
@@ -99,7 +102,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories
 
 		public async Task<Data.DTO.DataPoint> LookupLastDataPointAsync(int sensorId, CancellationToken ct)
 		{
-			var data = await this.QuerySingleAsync<DataPoint>(DsmrApi_SelectLastData,
+			var data = await this.QuerySingleAsync<DataPoint>(DsmrApi_SelectLastData, ct,
 				"@sensorId", sensorId).ConfigureAwait(false);
 
 			if(data == null) {
@@ -124,7 +127,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories
 
 		public async Task<Data.DTO.WeeklyHigh> LookupWeeklyHighAsync(int sensorId, CancellationToken ct)
 		{
-			var data = await this.QuerySingleAsync<WeeklyHigh>(DsmrApi_SelectWeeklyHigh,
+			var data = await this.QuerySingleAsync<WeeklyHigh>(DsmrApi_SelectWeeklyHigh, ct,
 			                                                   "@sensorId", sensorId).ConfigureAwait(false);
 
 			if(data == null) {
@@ -142,7 +145,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories
 
 		public async Task<IEnumerable<Data.DTO.DataPoint>> LookupDataPointsAsync(int sensorId, DateTime start, DateTime end, CancellationToken ct)
 		{
-			var data = await this.QueryAsync<DataPoint>(DsmrApi_SelectDataPoints,
+			var data = await this.QueryAsync<DataPoint>(DsmrApi_SelectDataPoints, ct,
 			                                            "@sensorId", sensorId,
 			                                            "@start", start,
 			                                            "@end", end).ConfigureAwait(false);

@@ -24,8 +24,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 	    [HttpGet]
 		[ExceptionHandling]
 	    [Route("{sensorId}")]
-	    public async Task<IHttpActionResult> GetPowerAggregatesAsync(int sensorId, DateTime? start = null,
-	                                                                 DateTime? end = null)
+	    public async Task<IHttpActionResult> GetPowerAggregatesAsync(int sensorId, DateTime? start = null, DateTime? end = null)
 	    {
 		    var now = DateTime.UtcNow;
 

@@ -1,0 +1,27 @@
+using System.Web.Http;
+
+using SensateIoT.SmartEnergy.Dsmr.DataAccess.Abstract;
+using SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories;
+
+using Unity;
+using Unity.Lifetime;
+using Unity.WebApi;
+
+namespace SensateIoT.SmartEnergy.Dsmr.Api
+{
+    public static class UnityConfig
+    {
+        public static void RegisterComponents()
+        {
+			var container = new UnityContainer();
+			var config = ConfigurationLoader.Load();
+
+			container.RegisterInstance(config);
+			container.RegisterType<IDeviceRepository, DeviceRepository>(new HierarchicalLifetimeManager());
+			container.RegisterType<IOlapRepository, OlapRepository>(new HierarchicalLifetimeManager());
+			container.RegisterType<IAuthenticationRepository, AuthenticationRepository>(new HierarchicalLifetimeManager());
+
+            GlobalConfiguration.Configuration.DependencyResolver = new UnityDependencyResolver(container);
+        }
+    }
+}

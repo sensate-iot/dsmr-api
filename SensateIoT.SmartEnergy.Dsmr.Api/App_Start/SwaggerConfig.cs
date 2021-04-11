@@ -1,10 +1,5 @@
-using System;
-using System.Web;
 using System.Web.Http;
-using WebActivatorEx;
-using SensateIoT.SmartEnergy.Dsmr.Api;
 using Swashbuckle.Application;
-
 
 namespace SensateIoT.SmartEnergy.Dsmr.Api
 {
@@ -12,7 +7,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api
     {
         public static void Register()
         {
-            GlobalConfiguration.Configuration.EnableSwagger(c =>
+            GlobalConfiguration.Configuration.EnableSwagger("dsmr-docs/{apiVersion}/swagger", c =>
                     {
 						// If schemes are not explicitly provided in a Swagger 2.0 document, then the scheme used to access
 						// the docs is taken as the default. If your API supports multiple schemes and you want to be explicit
@@ -169,7 +164,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api
                         //
                         //c.CustomProvider((defaultProvider) => new CachingSwaggerProvider(defaultProvider));
                     })
-                .EnableSwaggerUi(c => {
+                .EnableSwaggerUi("dsmr-docs/{*assetPath}", c => {
                         // Use the "DocumentTitle" option to change the Document title.
                         // Very helpful when you have multiple Swagger pages open, to tell them apart.
                         //

@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
-
-using Newtonsoft.Json;
 
 using SensateIoT.SmartEnergy.Dsmr.Api.Data;
 using SensateIoT.SmartEnergy.Dsmr.Api.Exceptions;
@@ -34,6 +29,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 		[Route("power/{sensorId}")]
         public async Task<IHttpActionResult> GetPowerAggregatesAsync(int sensorId, DateTime? start = null, DateTime? end = null, Granularity granularity = Granularity.Hour)
         {
+			this.ThrowIfDeviceUnauthorized(sensorId);
 	        var now = DateTime.UtcNow;
 
 	        if(start == null) {
@@ -61,6 +57,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 		[Route("environment/{sensorId}")]
         public async Task<IHttpActionResult> GetEnvironmentAggregatesAsync(int sensorId, DateTime? start = null, DateTime? end = null, Granularity granularity = Granularity.Hour)
         {
+			this.ThrowIfDeviceUnauthorized(sensorId);
 	        var now = DateTime.UtcNow;
 
 	        if(start == null) {
@@ -88,6 +85,8 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
         [Route("weekly-high/{sensorId}")]
         public async Task<IHttpActionResult> GetWeeklyHighAsync(int sensorId)
         {
+	        this.ThrowIfDeviceUnauthorized(sensorId);
+
 			var response = new Response<WeeklyHigh>();
 			var data = await this.m_olap.LookupWeeklyHighAsync(sensorId, CancellationToken.None).ConfigureAwait(false);
 
@@ -100,14 +99,14 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
         [Route("latest/{sensorId}")]
         public async Task<IHttpActionResult> LatestAsync(int sensorId)
         {
-	        var response = new Response<DataPoint>();
-
 			this.ThrowIfDeviceUnauthorized(sensorId);
 
-	        response.Data = await this.m_olap.LookupLastDataPointAsync(sensorId, CancellationToken.None)
-		        .ConfigureAwait(false);
+			var response = new Response<DataPoint> {
+				Data = await this.m_olap.LookupLastDataPointAsync(sensorId, CancellationToken.None)
+					.ConfigureAwait(false)
+			};
 
-	        return this.Ok(response);
+			return this.Ok(response);
         }
 
         private async Task<IEnumerable<EnvironmentDataPoint>> getEnvironmentDataAsync(int id, DateTime start, DateTime end, Granularity g, CancellationToken ct)

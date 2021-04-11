@@ -29,7 +29,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Middleware
 		{
 			logger.Info("Verifying product token.");
 
-			if(request.RequestUri.PathAndQuery.Contains("swagger")) {
+			if(request.RequestUri.PathAndQuery.Contains("dsmr-docs")) {
 				return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
 			}
 
@@ -69,9 +69,10 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Middleware
 				return false;
 			}
 
-			var pt = await this.m_repo.GetProductTokenAsync(uuid, ct).ConfigureAwait(false);
+			var pt = await this.m_repo.GetProductTokenAsync(uuid, ct)
+				.ConfigureAwait(false);
 
-			if(uuid != pt.Token) {
+			if(uuid != pt?.Token) {
 				return false;
 			}
 

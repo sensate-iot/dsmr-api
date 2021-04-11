@@ -27,11 +27,20 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 		    this.m_olap = olapRepo;
 	    }
 
+		/// <summary>
+		/// Get power data aggregates.
+		/// </summary>
+		/// <param name="sensorId">DSMR meter ID.</param>
+		/// <param name="start">Starting timestamp.</param>
+		/// <param name="end">Ending timestmap.</param>
+		/// <param name="granularity">Data granularity.</param>
+		/// <returns>Sequence of power data.</returns>
         [HttpGet]
 		[ExceptionHandling]
 		[Route("power/{sensorId}")]
 		[SwaggerResponse(HttpStatusCode.OK, "Result response.", typeof(Response<IEnumerable<EnergyDataPoint>>))]
 		[SwaggerResponse(HttpStatusCode.Unauthorized, "Unauthorized response.", typeof(Response<object>))]
+		
         public async Task<IHttpActionResult> GetPowerAggregatesAsync(int sensorId, DateTime? start = null, DateTime? end = null, Granularity granularity = Granularity.Hour)
         {
 			this.ThrowIfDeviceUnauthorized(sensorId);
@@ -57,6 +66,14 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 			return this.Ok(response);
         }
 
+		/// <summary>
+		/// Get environment data aggregates.
+		/// </summary>
+		/// <param name="sensorId">DSMR meter ID.</param>
+		/// <param name="start">Starting timestamp.</param>
+		/// <param name="end">Ending timestmap.</param>
+		/// <param name="granularity">Data granularity.</param>
+		/// <returns>Sequence of environment data.</returns>
         [HttpGet]
 		[ExceptionHandling]
 		[Route("environment/{sensorId}")]
@@ -87,6 +104,11 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 			return this.Ok(response);
         }
 
+		/// <summary>
+		/// Get the highest measurements in the last week.
+		/// </summary>
+		/// <param name="sensorId">DSMR meter ID.</param>
+		/// <returns>The weekly high data point.</returns>
         [HttpGet]
 		[ExceptionHandling]
         [Route("weekly-high/{sensorId}")]
@@ -103,6 +125,11 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 			return this.Ok(response);
         }
 
+		/// <summary>
+		/// Get the last data point.
+		/// </summary>
+		/// <param name="sensorId">DSMR meter ID.</param>
+		/// <returns>Returns the last processed data point.</returns>
         [HttpGet]
 		[ExceptionHandling]
         [Route("latest/{sensorId}")]

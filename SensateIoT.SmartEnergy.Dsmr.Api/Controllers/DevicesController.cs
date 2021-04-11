@@ -15,6 +15,10 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 	[RoutePrefix("dsmr/v1/devices")]
 	public class DevicesController : BaseController
 	{
+		/// <summary>
+		/// Get the devices for a user based on a given product token.
+		/// </summary>
+		/// <returns>List of devices.</returns>
 		[HttpGet]
 		[Route]
 		[SwaggerResponse(HttpStatusCode.OK, "Result response.", typeof(Response<IEnumerable<Device>>))]

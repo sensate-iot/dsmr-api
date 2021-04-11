@@ -24,6 +24,13 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 		    this.m_olap = olapRepo;
 	    }
 
+		/// <summary>
+		/// Get data points between two timestamps.
+		/// </summary>
+		/// <param name="sensorId">DSMR meter ID.</param>
+		/// <param name="start">Starting timestamp.</param>
+		/// <param name="end">Ending timestamp.</param>
+		/// <returns>Datapoints between <paramref name="start"/> and <paramref name="end"/>.</returns>
 	    [HttpGet]
 		[ExceptionHandling]
 	    [Route("{sensorId}")]

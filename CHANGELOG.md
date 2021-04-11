@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improve swagger documentation
 - Add swagger annotations
 
+### Updated
+- Build configuration
+- Documentation generation options
+
 ## [1.0.0] 11-04-2021
 ### Added
 - Device data access

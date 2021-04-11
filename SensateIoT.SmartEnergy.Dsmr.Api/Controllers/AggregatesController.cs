@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
+
+using Swashbuckle.Swagger.Annotations;
 
 using SensateIoT.SmartEnergy.Dsmr.Api.Data;
 using SensateIoT.SmartEnergy.Dsmr.Api.Exceptions;
@@ -27,6 +30,8 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
         [HttpGet]
 		[ExceptionHandling]
 		[Route("power/{sensorId}")]
+		[SwaggerResponse(HttpStatusCode.OK, "Result response.", typeof(Response<IEnumerable<EnergyDataPoint>>))]
+		[SwaggerResponse(HttpStatusCode.Unauthorized, "Unauthorized response.", typeof(Response<object>))]
         public async Task<IHttpActionResult> GetPowerAggregatesAsync(int sensorId, DateTime? start = null, DateTime? end = null, Granularity granularity = Granularity.Hour)
         {
 			this.ThrowIfDeviceUnauthorized(sensorId);
@@ -55,6 +60,8 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
         [HttpGet]
 		[ExceptionHandling]
 		[Route("environment/{sensorId}")]
+		[SwaggerResponse(HttpStatusCode.OK, "Result response.", typeof(Response<IEnumerable<EnvironmentDataPoint>>))]
+		[SwaggerResponse(HttpStatusCode.Unauthorized, "Unauthorized response.", typeof(Response<object>))]
         public async Task<IHttpActionResult> GetEnvironmentAggregatesAsync(int sensorId, DateTime? start = null, DateTime? end = null, Granularity granularity = Granularity.Hour)
         {
 			this.ThrowIfDeviceUnauthorized(sensorId);
@@ -83,6 +90,8 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
         [HttpGet]
 		[ExceptionHandling]
         [Route("weekly-high/{sensorId}")]
+		[SwaggerResponse(HttpStatusCode.OK, "Result response.", typeof(Response<IEnumerable<WeeklyHigh>>))]
+		[SwaggerResponse(HttpStatusCode.Unauthorized, "Unauthorized response.", typeof(Response<object>))]
         public async Task<IHttpActionResult> GetWeeklyHighAsync(int sensorId)
         {
 	        this.ThrowIfDeviceUnauthorized(sensorId);
@@ -97,6 +106,8 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
         [HttpGet]
 		[ExceptionHandling]
         [Route("latest/{sensorId}")]
+		[SwaggerResponse(HttpStatusCode.OK, "Result response.", typeof(Response<IEnumerable<DataPoint>>))]
+		[SwaggerResponse(HttpStatusCode.Unauthorized, "Unauthorized response.", typeof(Response<object>))]
         public async Task<IHttpActionResult> LatestAsync(int sensorId)
         {
 			this.ThrowIfDeviceUnauthorized(sensorId);

@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
+
+using Swashbuckle.Swagger.Annotations;
 
 using SensateIoT.SmartEnergy.Dsmr.Api.Data;
 using SensateIoT.SmartEnergy.Dsmr.Api.Middleware;
@@ -24,6 +27,8 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 	    [HttpGet]
 		[ExceptionHandling]
 	    [Route("{sensorId}")]
+		[SwaggerResponse(HttpStatusCode.OK, "Result response.", typeof(Response<IEnumerable<Device>>))]
+		[SwaggerResponse(HttpStatusCode.Unauthorized, "Unauthorized response.", typeof(Response<object>))]
 	    public async Task<IHttpActionResult> GetPowerAggregatesAsync(int sensorId, DateTime? start = null, DateTime? end = null)
 	    {
 			this.ThrowIfDeviceUnauthorized(sensorId);

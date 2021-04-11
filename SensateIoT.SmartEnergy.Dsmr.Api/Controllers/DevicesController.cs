@@ -1,9 +1,11 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Web.Http;
 
 using Newtonsoft.Json;
+using Swashbuckle.Swagger.Annotations;
 
 using SensateIoT.SmartEnergy.Dsmr.Api.Data;
 using SensateIoT.SmartEnergy.Dsmr.Data.DTO;
@@ -15,6 +17,8 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 	{
 		[HttpGet]
 		[Route]
+		[SwaggerResponse(HttpStatusCode.OK, "Result response.", typeof(Response<IEnumerable<Device>>))]
+		[SwaggerResponse(HttpStatusCode.Unauthorized, "Unauthorized response.", typeof(Response<object>))]
 		public  IHttpActionResult GetDevices()
 		{
 			var response = new Response<object>();

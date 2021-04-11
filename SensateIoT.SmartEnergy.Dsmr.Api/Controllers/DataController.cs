@@ -12,7 +12,7 @@ using SensateIoT.SmartEnergy.Dsmr.DataAccess.Abstract;
 namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 {
 	[RoutePrefix("dsmr/v1/data")]
-	public class DataController : ApiController
+	public class DataController : BaseController 
 	{
 	    private readonly IOlapRepository m_olap;
 
@@ -26,6 +26,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 	    [Route("{sensorId}")]
 	    public async Task<IHttpActionResult> GetPowerAggregatesAsync(int sensorId, DateTime? start = null, DateTime? end = null)
 	    {
+			this.ThrowIfDeviceUnauthorized(sensorId);
 		    var now = DateTime.UtcNow;
 
 		    if(start == null) {

@@ -69,9 +69,10 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Middleware
 				return false;
 			}
 
-			var pt = await this.m_repo.GetProductTokenAsync(uuid, ct).ConfigureAwait(false);
+			var pt = await this.m_repo.GetProductTokenAsync(uuid, ct)
+				.ConfigureAwait(false);
 
-			if(uuid != pt.Token) {
+			if(uuid != pt?.Token) {
 				return false;
 			}
 

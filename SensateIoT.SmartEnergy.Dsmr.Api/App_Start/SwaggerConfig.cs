@@ -1,3 +1,5 @@
+using System.Configuration;
+using System.IO;
 using System.Web.Http;
 using Swashbuckle.Application;
 
@@ -89,6 +91,11 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api
                         // more Xml comment files.
                         //
                         //c.IncludeXmlComments(GetXmlCommentsPath());
+                        var path = ConfigurationManager.AppSettings["xmlCommentsPath"];
+
+                        if(!string.IsNullOrEmpty(path)) {
+	                        c.IncludeXmlComments(path);
+                        }
 
                         // Swashbuckle makes a best attempt at generating Swagger compliant JSON schemas for the various types
                         // exposed in your API. However, there may be occasions when more control of the output is needed.

@@ -12,6 +12,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api
         {
 	        var auth = GlobalConfiguration.Configuration.DependencyResolver.GetService(typeof(IAuthenticationRepository)) as IAuthenticationRepository;
 
+	        config.EnableCors();
 			config.MapHttpAttributeRoutes();
 			config.MessageHandlers.Add(new RequestLoggingMiddleware());
 			config.MessageHandlers.Add(new AuthenticationMiddleware(auth));

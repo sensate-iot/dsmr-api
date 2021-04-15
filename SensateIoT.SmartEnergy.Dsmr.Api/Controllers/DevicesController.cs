@@ -3,16 +3,19 @@ using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 using Newtonsoft.Json;
 using Swashbuckle.Swagger.Annotations;
 
 using SensateIoT.SmartEnergy.Dsmr.Api.Data;
+using SensateIoT.SmartEnergy.Dsmr.Api.Middleware;
 using SensateIoT.SmartEnergy.Dsmr.Data.DTO;
 
 namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 {
 	[RoutePrefix("dsmr/v1/devices")]
+	[EnableCors("*", "*", "*")]
 	public class DevicesController : BaseController
 	{
 		/// <summary>
@@ -21,6 +24,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 		/// <returns>List of devices.</returns>
 		[HttpGet]
 		[Route]
+		[ExceptionHandling]
 		[SwaggerResponse(HttpStatusCode.OK, "Result response.", typeof(Response<IEnumerable<Device>>))]
 		[SwaggerResponse(HttpStatusCode.Unauthorized, "Unauthorized response.", typeof(Response<object>))]
 		public  IHttpActionResult GetDevices()

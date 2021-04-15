@@ -4,6 +4,7 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.Http.Cors;
 
 using Swashbuckle.Swagger.Annotations;
 
@@ -15,6 +16,7 @@ using SensateIoT.SmartEnergy.Dsmr.DataAccess.Abstract;
 namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 {
 	[RoutePrefix("dsmr/v1/data")]
+	[EnableCors("*", "*", "*")]
 	public class DataController : BaseController 
 	{
 	    private readonly IOlapRepository m_olap;

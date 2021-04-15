@@ -41,7 +41,6 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 		[Route("power/{sensorId}")]
 		[SwaggerResponse(HttpStatusCode.OK, "Result response.", typeof(Response<IEnumerable<EnergyDataPoint>>))]
 		[SwaggerResponse(HttpStatusCode.Unauthorized, "Unauthorized response.", typeof(Response<object>))]
-		
         public async Task<IHttpActionResult> GetPowerAggregatesAsync(int sensorId, DateTime? start = null, DateTime? end = null, Granularity granularity = Granularity.Hour)
         {
 			this.ThrowIfDeviceUnauthorized(sensorId);

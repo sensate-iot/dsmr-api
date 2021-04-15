@@ -30,6 +30,9 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Middleware
 			logger.Info("Verifying product token.");
 
 			if(request.RequestUri.PathAndQuery.Contains("dsmr-docs")) {
+			}
+
+			if(request.Method == HttpMethod.Options) {
 				return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
 			}
 

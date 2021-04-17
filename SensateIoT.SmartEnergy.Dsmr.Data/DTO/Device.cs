@@ -9,7 +9,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.Data.DTO
 		public int Id { get; set; }
 		[JsonIgnore]
 		public string ServiceName { get; set; }
-		[JsonProperty("name")]
+		[JsonProperty("enabled")]
 		public bool Enabled { get; set; }
 		[JsonIgnore]
 		public string PowerSensorId { get; set; }

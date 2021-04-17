@@ -51,6 +51,26 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 	        throw new HttpResponseException(msg);
 		}
 
+		protected User GetUser()
+		{
+			if(!this.Request.Properties.TryGetValue("User", out var obj)) {
+				return null;
+			}
+
+			return obj as User;
+		}
+
+		protected void ThrowResponse<TValue>(Response<TValue> response, HttpStatusCode code)
+		{
+			var resp = JsonConvert.SerializeObject(response);
+
+			throw new HttpResponseException(new HttpResponseMessage {
+				Content = new StringContent(resp, Encoding.UTF8, "application/json"),
+				ReasonPhrase = "Unable to complete request",
+				StatusCode = code
+			});
+		}
+
 		private bool verifyDevice(Device device, int deviceId, out string error)
 		{
 			if(device.Id != deviceId) {

@@ -8,8 +8,8 @@ using System.Web.Http.Cors;
 
 using Swashbuckle.Swagger.Annotations;
 
+using SensateIoT.SmartEnergy.Dsmr.Api.Attributes;
 using SensateIoT.SmartEnergy.Dsmr.Api.Data;
-using SensateIoT.SmartEnergy.Dsmr.Api.Middleware;
 using SensateIoT.SmartEnergy.Dsmr.Data.DTO;
 using SensateIoT.SmartEnergy.Dsmr.DataAccess.Abstract;
 
@@ -34,7 +34,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 		/// <param name="end">Ending timestamp.</param>
 		/// <returns>Datapoints between <paramref name="start"/> and <paramref name="end"/>.</returns>
 	    [HttpGet]
-		[ExceptionHandling]
+		[ExceptionHandling, ProductTokenAuthentication]
 	    [Route("{sensorId}")]
 		[SwaggerResponse(HttpStatusCode.OK, "Result response.", typeof(Response<IEnumerable<Device>>))]
 		[SwaggerResponse(HttpStatusCode.Unauthorized, "Unauthorized response.", typeof(Response<object>))]

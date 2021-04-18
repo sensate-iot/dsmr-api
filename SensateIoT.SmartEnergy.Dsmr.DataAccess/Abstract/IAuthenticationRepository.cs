@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Threading;
 
+using SensateIoT.SmartEnergy.Dsmr.Data.DTO;
 using SensateIoT.SmartEnergy.Dsmr.Data.Models;
 
 using User = SensateIoT.SmartEnergy.Dsmr.Data.DTO.User;
@@ -12,5 +13,6 @@ namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Abstract
 	{
 		Task<ProductToken> GetProductTokenAsync(Guid token, CancellationToken ct);
 		Task<User> GetUserAsync(Guid id, CancellationToken ct);
+		Task<LoginResult> LoginAsync(string email, string otp, CancellationToken ct);
 	}
 }

@@ -5,11 +5,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Http.Cors;
+
 using Swashbuckle.Swagger.Annotations;
 
+using SensateIoT.SmartEnergy.Dsmr.Api.Attributes;
 using SensateIoT.SmartEnergy.Dsmr.Api.Data;
 using SensateIoT.SmartEnergy.Dsmr.Api.Exceptions;
-using SensateIoT.SmartEnergy.Dsmr.Api.Middleware;
 using SensateIoT.SmartEnergy.Dsmr.Data.DTO;
 using SensateIoT.SmartEnergy.Dsmr.DataAccess.Abstract;
 
@@ -37,7 +38,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 		/// <param name="granularity">Data granularity.</param>
 		/// <returns>Sequence of power data.</returns>
         [HttpGet]
-		[ExceptionHandling]
+		[ExceptionHandling, ProductTokenAuthentication]
 		[Route("power/{sensorId}")]
 		[SwaggerResponse(HttpStatusCode.OK, "Result response.", typeof(Response<IEnumerable<EnergyDataPoint>>))]
 		[SwaggerResponse(HttpStatusCode.Unauthorized, "Unauthorized response.", typeof(Response<object>))]
@@ -75,7 +76,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 		/// <param name="granularity">Data granularity.</param>
 		/// <returns>Sequence of environment data.</returns>
         [HttpGet]
-		[ExceptionHandling]
+		[ExceptionHandling, ProductTokenAuthentication]
 		[Route("environment/{sensorId}")]
 		[SwaggerResponse(HttpStatusCode.OK, "Result response.", typeof(Response<IEnumerable<EnvironmentDataPoint>>))]
 		[SwaggerResponse(HttpStatusCode.Unauthorized, "Unauthorized response.", typeof(Response<object>))]
@@ -110,7 +111,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 		/// <param name="sensorId">DSMR meter ID.</param>
 		/// <returns>The weekly high data point.</returns>
         [HttpGet]
-		[ExceptionHandling]
+		[ExceptionHandling, ProductTokenAuthentication]
         [Route("weekly-high/{sensorId}")]
 		[SwaggerResponse(HttpStatusCode.OK, "Result response.", typeof(Response<IEnumerable<WeeklyHigh>>))]
 		[SwaggerResponse(HttpStatusCode.Unauthorized, "Unauthorized response.", typeof(Response<object>))]
@@ -131,7 +132,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 		/// <param name="sensorId">DSMR meter ID.</param>
 		/// <returns>Returns the last processed data point.</returns>
         [HttpGet]
-		[ExceptionHandling]
+		[ExceptionHandling, ProductTokenAuthentication]
         [Route("latest/{sensorId}")]
 		[SwaggerResponse(HttpStatusCode.OK, "Result response.", typeof(Response<IEnumerable<DataPoint>>))]
 		[SwaggerResponse(HttpStatusCode.Unauthorized, "Unauthorized response.", typeof(Response<object>))]

@@ -29,7 +29,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Middleware
 
 		protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
 		{
-			await this.logRequest(request).ConfigureAwait(false);
+			logger.Info($"Received request: {request.Method.Method} {request.RequestUri.PathAndQuery} from {getClientIp(request)}");
 			var response = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
 			await this.logResponse(response).ConfigureAwait(false);
 
@@ -67,18 +67,6 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Middleware
 			}
 
 			return realIPs.First();
-		}
-
-		private async Task logRequest(HttpRequestMessage request)
-		{
-			logger.Info($"Received request: {request.Method.Method} {request.RequestUri.PathAndQuery} from {getClientIp(request)}");
-
-			using(var stream = this.m_manager.GetStream()) {
-				await request.Content.CopyToAsync(stream).ConfigureAwait(false);
-				var body = readStreamInChunks(stream);
-
-				logger.Debug($"Request body: {body}");
-			}
 		}
 
 		private async Task logResponse(HttpResponseMessage response)

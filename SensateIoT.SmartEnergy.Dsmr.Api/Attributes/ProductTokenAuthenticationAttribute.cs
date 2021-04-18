@@ -5,6 +5,9 @@ using System.Net.Http;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Web.Http;
+using System.Web.Http.Controllers;
+using System.Web.Http.Filters;
 
 using log4net;
 using Newtonsoft.Json;
@@ -12,59 +15,60 @@ using Newtonsoft.Json;
 using SensateIoT.SmartEnergy.Dsmr.Api.Data;
 using SensateIoT.SmartEnergy.Dsmr.DataAccess.Abstract;
 
-namespace SensateIoT.SmartEnergy.Dsmr.Api.Middleware
+namespace SensateIoT.SmartEnergy.Dsmr.Api.Attributes
 {
-	public class AuthenticationMiddleware : DelegatingHandler
+	public class ProductTokenAuthenticationAttribute : AuthorizationFilterAttribute 
 	{
-		private static readonly ILog logger = LogManager.GetLogger(nameof(AuthenticationMiddleware));
+		private static readonly ILog logger = LogManager.GetLogger(nameof(ProductTokenAuthenticationAttribute));
 
 		private readonly IAuthenticationRepository m_repo;
 
-		public AuthenticationMiddleware(IAuthenticationRepository repo)
+		public ProductTokenAuthenticationAttribute()
 		{
-			this.m_repo = repo;
+	        this.m_repo = GlobalConfiguration.Configuration.DependencyResolver.GetService(typeof(IAuthenticationRepository)) as IAuthenticationRepository;
 		}
 
-		protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+		public override async Task OnAuthorizationAsync(HttpActionContext ctx, CancellationToken ct)
 		{
+			var request = ctx.Request;
 			logger.Info("Verifying product token.");
 
-			if(request.RequestUri.PathAndQuery.Contains("dsmr-docs")) {
-				return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
-			}
-
 			if(request.Method == HttpMethod.Options) {
-				return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+				return;
 			}
 
 			if(!request.Headers.TryGetValues("X-ProductToken", out var values)) {
 				logger.Info("No product token found!");
-				return this.respondWithError("Product token missing.", HttpStatusCode.Unauthorized);
+				this.respondWithError("Product token missing.", null, HttpStatusCode.Forbidden);
 			}
 
 			var token = values.First();
+
 			logger.Debug("Found product token: " + token);
-			var verify = await this.verifyToken(request, token, cancellationToken).ConfigureAwait(false);
+			var verify = await this.verifyToken(request, token, ct).ConfigureAwait(false);
 
 			if(!verify) {
 				logger.Info("Product token invalid. Stopping.");
-				return this.respondWithError("Unable to authenticate using product token.", HttpStatusCode.Unauthorized);
+				this.respondWithError("Unable to authenticate using product token.", "Product token invalid.", HttpStatusCode.Forbidden);
 			}
-
-			return await base.SendAsync(request, cancellationToken);
 		}
 
-		private HttpResponseMessage respondWithError(string error, HttpStatusCode code)
+		private void respondWithError(string error, string message, HttpStatusCode code)
 		{
 			var response = new Response<string>();
+
+			if(!string.IsNullOrEmpty(message)) {
+				response.AddError(message);
+			}
 
 			response.AddError(error);
 			var resp = JsonConvert.SerializeObject(response);
 
-			return new HttpResponseMessage(code) {
+			throw new HttpResponseException(new HttpResponseMessage {
 				Content = new StringContent(resp, Encoding.UTF8, "application/json"),
-				ReasonPhrase = "Invalid product token"
-			};
+				ReasonPhrase = "Unable to complete request",
+				StatusCode = code
+			});
 		}
 
 		private async Task<bool> verifyToken(HttpRequestMessage message, string token, CancellationToken ct)
@@ -87,4 +91,3 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Middleware
 		}
 	}
 }
-

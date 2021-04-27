@@ -105,6 +105,13 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 			return this.Ok(response);
         }
 
+		/// <summary>
+		/// Get power data grouped by hour.
+		/// </summary>
+		/// <param name="sensorId">DSMR meter ID.</param>
+		/// <param name="start">Starting timestamp.</param>
+		/// <param name="end">Ending timestmap.</param>
+		/// <returns>Power data between <paramref name="start"/> and <paramref name="end"/>.</returns>
 		[HttpGet, Route("power/{sensorId}/hour")]
 		[ProductTokenAuthentication, ExceptionHandling]
 		[SwaggerResponse(HttpStatusCode.OK, "Result response.", typeof(Response<IEnumerable<GroupedPowerData>>))]

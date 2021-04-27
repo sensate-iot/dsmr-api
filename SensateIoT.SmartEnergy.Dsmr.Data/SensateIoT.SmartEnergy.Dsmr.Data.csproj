@@ -49,9 +49,11 @@
     <Compile Include="DTO\EnergyDataPoint.cs" />
     <Compile Include="DTO\EnvironmentDataPoint.cs" />
     <Compile Include="DTO\Granularity.cs" />
+    <Compile Include="DTO\GroupedPowerData.cs" />
     <Compile Include="DTO\LoginResult.cs" />
     <Compile Include="DTO\User.cs" />
     <Compile Include="Models\Device.cs" />
+    <Compile Include="Models\GroupedPowerData.cs" />
     <Compile Include="Models\ProductToken.cs" />
     <Compile Include="DTO\Tariff.cs" />
     <Compile Include="DTO\WeeklyHigh.cs" />

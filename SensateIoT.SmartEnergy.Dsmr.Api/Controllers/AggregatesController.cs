@@ -105,6 +105,33 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 			return this.Ok(response);
         }
 
+		[HttpGet, Route("power/{sensorId}/hour")]
+		[ProductTokenAuthentication, ExceptionHandling]
+		[SwaggerResponse(HttpStatusCode.OK, "Result response.", typeof(Response<IEnumerable<GroupedPowerData>>))]
+		[SwaggerResponse(HttpStatusCode.Unauthorized, "Unauthorized response.", typeof(Response<object>))]
+		public async Task<IHttpActionResult> GetPowerDataByHour(int sensorId, DateTime? start = null, DateTime? end = null)
+		{
+			this.ThrowIfDeviceUnauthorized(sensorId);
+			var now = DateTime.UtcNow;
+
+	        if(start == null) {
+		        start = now.AddDays(-7);
+	        }
+
+	        if(end == null) {
+		        end = now.AddDays(1);
+	        }
+
+		    start = start.Value.ToUniversalTime();
+		    end = end.Value.ToUniversalTime();
+			var response = new Response<IEnumerable<GroupedPowerData>>();
+			var data = await this.m_olap.LookupPowerDataByHour(sensorId, start.Value, end.Value, CancellationToken.None)
+				.ConfigureAwait(false);
+
+			response.Data = data;
+			return this.Ok(response);
+		}
+
 		/// <summary>
 		/// Get the highest measurements in the last week.
 		/// </summary>

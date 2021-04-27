@@ -14,6 +14,7 @@ using SensateIoT.SmartEnergy.Dsmr.DataAccess.Abstract;
 using DataPoint = SensateIoT.SmartEnergy.Dsmr.Data.Models.DataPoint;
 using EnergyDataPoint = SensateIoT.SmartEnergy.Dsmr.Data.DTO.EnergyDataPoint;
 using EnvironmentDataPoint = SensateIoT.SmartEnergy.Dsmr.Data.DTO.EnvironmentDataPoint;
+using GroupedPowerData = SensateIoT.SmartEnergy.Dsmr.Data.DTO.GroupedPowerData;
 using WeeklyHigh = SensateIoT.SmartEnergy.Dsmr.Data.Models.WeeklyHigh;
 
 namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories
@@ -26,6 +27,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories
 		private const string DsmrApi_SelectLastData = "DsmrApi_SelectLastData";
 		private const string DsmrApi_SelectWeeklyHigh = "DsmrApi_SelectWeeklyHigh";
 		private const string DsmrApi_SelectDataPoints = "DsmrApi_SelectDataPoints";
+		private const string DsmrApi_SelectPowerDataByHour = "DsmrApi_SelectPowerDataByHour";
 
 		private const string DsmrApi_SelectPowerDailyAverages = "DsmrApi_SelectPowerDailyAverages";
 		private const string DsmrApi_SelectEnvironmentDailyAverages = "DsmrApi_SelectEnvironmentDailyAverages";
@@ -97,6 +99,21 @@ namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories
 				OutsideAirTemperature = x.OutsideAirTemperature,
 				Pressure = x.Pressure,
 				RH = x.RH
+			});
+		}
+
+		public async Task<IEnumerable<GroupedPowerData>> LookupPowerDataByHour(int sensorId, DateTime start, DateTime end, CancellationToken ct)
+		{
+			var powerData = await this.QueryAsync<Data.Models.GroupedPowerData>(DsmrApi_SelectPowerDataByHour,
+				ct,
+				"@sensorId", sensorId,
+				"@start", start,
+				"@end", end).ConfigureAwait(false);
+
+			return powerData.Select(x => new GroupedPowerData {
+				Hour = x.Hour,
+				Production = x.Production,
+				Usage = x.Usage
 			});
 		}
 

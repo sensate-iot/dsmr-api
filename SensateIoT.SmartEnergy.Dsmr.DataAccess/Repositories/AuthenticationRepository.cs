@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Reflection.Emit;
 using System.Threading;
 using System.Threading.Tasks;
 
 using JetBrains.Annotations;
+
 using SensateIoT.SmartEnergy.Dsmr.Data.DTO;
 using SensateIoT.SmartEnergy.Dsmr.Data.Models;
 using SensateIoT.SmartEnergy.Dsmr.Data.Settings;
@@ -23,6 +23,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories
 		private const string DsmrApi_DsmrApi_SelectUserById = "DsmrApi_SelectUserById";
 		private const string DsmrApi_SelectDevicesForUser = "DsmrApi_SelectDevicesForUser";
 		private const string DsmrApi_Login = "DsmrApi_Login";
+		private const string DsmrApi_Logout = "DsmrApi_Logout";
 
 		public AuthenticationRepository(AppSettings settings) : base(new SqlConnection(settings.DsmrProductConnectionString))
 		{
@@ -64,6 +65,15 @@ namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories
 					ServiceName = x.ServiceName
 				})
 			};
+		}
+
+		public async Task LogoutAsync(string email, CancellationToken ct)
+		{
+			if(ct.IsCancellationRequested) {
+				throw new OperationCanceledException("Logout query cancelled.", ct);
+			}
+
+			await this.ExecuteAsync(DsmrApi_Logout, "@email", email).ConfigureAwait(false);
 		}
 	}
 }

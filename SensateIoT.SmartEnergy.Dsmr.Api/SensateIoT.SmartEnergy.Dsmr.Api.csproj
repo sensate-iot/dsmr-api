@@ -164,6 +164,7 @@
     <Compile Include="Controllers\DevicesController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Data\LoginRequest.cs" />
+    <Compile Include="Data\LogoutRequest.cs" />
     <Compile Include="Data\Response.cs" />
     <Compile Include="Exceptions\InvalidQueryArgumentException.cs" />
     <Compile Include="Global.asax.cs">

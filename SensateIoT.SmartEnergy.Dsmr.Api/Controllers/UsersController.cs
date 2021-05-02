@@ -6,17 +6,19 @@ using System.Web.Http;
 using System.Web.Http.Cors;
 
 using log4net;
+using SensateIoT.SmartEnergy.Dsmr.Api.Adapters;
+
 using Swashbuckle.Swagger.Annotations;
 
 using SensateIoT.SmartEnergy.Dsmr.Api.Attributes;
 using SensateIoT.SmartEnergy.Dsmr.Api.Data;
 using SensateIoT.SmartEnergy.Dsmr.Data.DTO;
+using SensateIoT.SmartEnergy.Dsmr.Data.Settings;
 using SensateIoT.SmartEnergy.Dsmr.DataAccess.Abstract;
 
 
 namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 {
-
 	[RoutePrefix("dsmr/v1/users")]
 	[EnableCors("*", "*", "*")]
 	public class UsersController : BaseController
@@ -24,10 +26,14 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 		private static ILog logger = LogManager.GetLogger(nameof(UsersController));
 
 		private readonly IAuthenticationRepository m_repo;
+		private readonly ISmsAdapter m_adapter;
+		private readonly AppSettings m_settings;
 
-		public UsersController(IAuthenticationRepository repo)
+		public UsersController(IAuthenticationRepository repo, ISmsAdapter adapter, AppSettings settings)
 		{
 			this.m_repo = repo;
+			this.m_adapter = adapter;
+			this.m_settings = settings;
 		}
 
 		[HttpGet]
@@ -74,6 +80,35 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 			return this.Ok(response);
 		}
 
+		[HttpPost, Route("otp")]
+		[ExceptionHandling]
+		[SwaggerResponse(HttpStatusCode.NoContent, "Successful OTP response")]
+		[SwaggerResponse(HttpStatusCode.BadRequest, "Invalid OTP request.", typeof(Response<object>))]
+		public async Task<IHttpActionResult> GetOtpToken([FromBody] OtpRequest request)
+		{
+			var response = new Response<object>();
+
+			if(string.IsNullOrEmpty(request?.Email)) {
+				response.AddError("Invalid OTP request. Email property is required.");
+				this.ThrowResponse(response, HttpStatusCode.BadRequest);
+			}
+
+			var token = await this.m_repo.CreateOtpTokenAsync(request.Email, CancellationToken.None).ConfigureAwait(false);
+
+			if(string.IsNullOrEmpty(token?.Token) || token.Msisdn == 0L) {
+				response.AddError($"Unable to send OTP to {request.Email}.");
+				this.ThrowResponse(response, HttpStatusCode.BadRequest);
+			}
+
+			var msisdn = $"+{token.Msisdn}";
+			logger.Info($"Writing OTP token to {msisdn}.");
+
+			await this.m_adapter.SendAsync(this.m_settings.SenderId, msisdn, $"Your OTP code is {token.Token}.")
+				.ConfigureAwait(false);
+
+			return this.StatusCode(HttpStatusCode.NoContent);
+		}
+
 		[HttpPost]
 		[Route("logout")]
 		[ExceptionHandling, ProductTokenAuthentication]
@@ -104,7 +139,6 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 			return this.StatusCode(HttpStatusCode.NoContent);
 		}
 		
-
 		private void verifyLoginRequest(LoginRequest request)
 		{
 			var response = new Response<LoginResult>();

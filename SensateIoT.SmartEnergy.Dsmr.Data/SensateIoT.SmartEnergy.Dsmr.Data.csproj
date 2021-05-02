@@ -54,6 +54,7 @@
     <Compile Include="DTO\User.cs" />
     <Compile Include="Models\Device.cs" />
     <Compile Include="Models\GroupedPowerData.cs" />
+    <Compile Include="Models\OtpToken.cs" />
     <Compile Include="Models\ProductToken.cs" />
     <Compile Include="DTO\Tariff.cs" />
     <Compile Include="DTO\WeeklyHigh.cs" />

@@ -36,6 +36,10 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 			this.m_settings = settings;
 		}
 
+		/// <summary>
+		/// Get the current user.
+		/// </summary>
+		/// <returns>The current user.</returns>
 		[HttpGet]
 		[Route]
 		[ExceptionHandling, ProductTokenAuthentication]
@@ -55,6 +59,11 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 			return this.Ok(response);
 		}
 
+		/// <summary>
+		/// Attempt to login using a email and OTP.
+		/// </summary>
+		/// <param name="request">Username/password combo.</param>
+		/// <returns>Login response.</returns>
 		[HttpPost]
 		[Route("login")]
 		[ExceptionHandling]
@@ -80,6 +89,11 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 			return this.Ok(response);
 		}
 
+		/// <summary>
+		/// Request a new OTP.
+		/// </summary>
+		/// <param name="request">OTP request, containing the username/email.</param>
+		/// <returns>OTP request result.</returns>
 		[HttpPost, Route("otp")]
 		[ExceptionHandling]
 		[SwaggerResponse(HttpStatusCode.NoContent, "Successful OTP response")]
@@ -109,6 +123,11 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 			return this.StatusCode(HttpStatusCode.NoContent);
 		}
 
+		/// <summary>
+		/// Logout the current user.
+		/// </summary>
+		/// <param name="request">Logout request.</param>
+		/// <returns>Logout request result.</returns>
 		[HttpPost]
 		[Route("logout")]
 		[ExceptionHandling, ProductTokenAuthentication]

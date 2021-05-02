@@ -14,5 +14,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Abstract
 		Task<ProductToken> GetProductTokenAsync(Guid token, CancellationToken ct);
 		Task<User> GetUserAsync(Guid id, CancellationToken ct);
 		Task<LoginResult> LoginAsync(string email, string otp, CancellationToken ct);
+		Task LogoutAsync(string email, CancellationToken ct);
+		Task<OtpToken> CreateOtpTokenAsync(string id, CancellationToken ct);
 	}
 }

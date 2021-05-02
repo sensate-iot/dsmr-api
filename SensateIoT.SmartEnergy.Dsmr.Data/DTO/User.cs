@@ -15,6 +15,8 @@ namespace SensateIoT.SmartEnergy.Dsmr.Data.DTO
 		public string LastName { get; set; }
 		[JsonProperty("email")]
 		public string Email { get; set; }
+		[JsonProperty("msisdn")]
+		public string Msisdn { get; set; }
 		[JsonIgnore]
 		public bool Enabled { get; set; }
 		[JsonProperty("timestamp")]

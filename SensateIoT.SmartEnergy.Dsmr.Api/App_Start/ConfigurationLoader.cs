@@ -13,8 +13,17 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api
 				OlapConnectionString = ConfigurationManager.ConnectionStrings["Olap"]?.ConnectionString ??
 				                       throw new InvalidOperationException("OLAP connection string not configured"),
 				DsmrProductConnectionString = ConfigurationManager.ConnectionStrings["DsmrProduct"]?.ConnectionString ??
-				                       throw new InvalidOperationException("OLAP connection string not configured")
+				                       throw new InvalidOperationException("OLAP connection string not configured"),
+				TwilioPhoneSid = ConfigurationManager.AppSettings["twilioPhoneToken"],
+				OtpEnabled = getOptionalBoolean("otpEnabled", true),
+				SenderId = ConfigurationManager.AppSettings["senderId"]
 			};
+		}
+
+		private static bool getOptionalBoolean(string setting, bool @default)
+		{
+			var value = ConfigurationManager.AppSettings[setting];
+			return string.IsNullOrEmpty(value) ? @default : bool.Parse(value);
 		}
 	}
 }

@@ -6,10 +6,9 @@ using System.Web.Http;
 using System.Web.Http.Cors;
 
 using log4net;
-using SensateIoT.SmartEnergy.Dsmr.Api.Adapters;
-
 using Swashbuckle.Swagger.Annotations;
 
+using SensateIoT.SmartEnergy.Dsmr.Api.Adapters;
 using SensateIoT.SmartEnergy.Dsmr.Api.Attributes;
 using SensateIoT.SmartEnergy.Dsmr.Api.Data;
 using SensateIoT.SmartEnergy.Dsmr.Data.DTO;
@@ -129,7 +128,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 		/// <param name="request">Logout request.</param>
 		/// <returns>Logout request result.</returns>
 		[HttpPost]
-		[Route("logout")]
+		[Route("logout", Name = "UserLogout")]
 		[ExceptionHandling, ProductTokenAuthentication]
 		[SwaggerResponse(HttpStatusCode.NoContent, "Successful logout response")]
 		[SwaggerResponse(HttpStatusCode.Unauthorized, "Unauthorized response.", typeof(Response<object>))]

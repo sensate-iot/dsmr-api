@@ -128,13 +128,13 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 		/// <param name="request">Logout request.</param>
 		/// <returns>Logout request result.</returns>
 		[HttpPost]
-		[Route("logout", Name = "UserLogout")]
+		[Route("logout")]
 		[ExceptionHandling, ProductTokenAuthentication]
 		[SwaggerResponse(HttpStatusCode.NoContent, "Successful logout response")]
 		[SwaggerResponse(HttpStatusCode.Unauthorized, "Unauthorized response.", typeof(Response<object>))]
 		[SwaggerResponse(HttpStatusCode.Forbidden, "Unauthorized response.", typeof(Response<object>))]
 		[SwaggerResponse(HttpStatusCode.BadRequest, "Invalid logout request.", typeof(Response<object>))]
-		public async Task<IHttpActionResult> Login([FromBody] LogoutRequest request)
+		public async Task<IHttpActionResult> Logout([FromBody] LogoutRequest request)
 		{
 			var response = new Response<string>();
 			logger.Info($"Attempting to logout user {request?.Email}");

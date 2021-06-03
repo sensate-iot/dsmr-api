@@ -12,9 +12,13 @@ using SensateIoT.SmartEnergy.Dsmr.Api.Attributes;
 using SensateIoT.SmartEnergy.Dsmr.Api.Data;
 using SensateIoT.SmartEnergy.Dsmr.Api.Exceptions;
 using SensateIoT.SmartEnergy.Dsmr.Data.DTO;
+using SensateIoT.SmartEnergy.Dsmr.Data.Models;
 using SensateIoT.SmartEnergy.Dsmr.DataAccess.Abstract;
-
+using DataPoint = SensateIoT.SmartEnergy.Dsmr.Data.DTO.DataPoint;
 using EnergyDataPoint = SensateIoT.SmartEnergy.Dsmr.Data.DTO.EnergyDataPoint;
+using EnvironmentDataPoint = SensateIoT.SmartEnergy.Dsmr.Data.DTO.EnvironmentDataPoint;
+using GroupedPowerData = SensateIoT.SmartEnergy.Dsmr.Data.DTO.GroupedPowerData;
+using WeeklyHigh = SensateIoT.SmartEnergy.Dsmr.Data.DTO.WeeklyHigh;
 
 namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 {
@@ -138,6 +142,42 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 			response.Data = data;
 			return this.Ok(response);
 		}
+
+		/// <summary>
+		/// Get energy usage per month.
+		/// </summary>
+		/// <param name="sensorId">DSMR meter ID.</param>
+		/// <param name="start">Starting timestamp.</param>
+		/// <param name="end">Ending timestmap.</param>
+		/// <returns>Power data between <paramref name="start"/> and <paramref name="end"/>.</returns>
+		[HttpGet, Route("energy/{sensorId}")]
+		[ProductTokenAuthentication, ExceptionHandling]
+		[SwaggerResponse(HttpStatusCode.OK, "Result response.", typeof(Response<EnergyUsageData>))]
+		[SwaggerResponse(HttpStatusCode.Unauthorized, "Unauthorized response.", typeof(Response<object>))]
+		public async Task<IHttpActionResult> GetEnergyUsagePerMonth(int sensorId, DateTime? start = null, DateTime? end = null)
+		{
+			this.ThrowIfDeviceUnauthorized(sensorId);
+			var now = DateTime.UtcNow;
+
+	        if(start == null) {
+		        start = now.AddDays(-7);
+	        }
+
+	        if(end == null) {
+		        end = now.AddDays(1);
+	        }
+
+		    start = start.Value.ToUniversalTime();
+		    end = end.Value.ToUniversalTime();
+
+			var response = new Response<EnergyUsageData>();
+			var data = await this.m_olap.LookupEnergyDataAsync(sensorId, start.Value, end.Value, CancellationToken.None)
+				.ConfigureAwait(false);
+
+			response.Data = data;
+			return this.Ok(response);
+		}
+
 
 		/// <summary>
 		/// Get the highest measurements in the last week.

@@ -19,7 +19,9 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Adapters
 
 		public TwilioAdapter(AppSettings settings)
 		{
-			this.m_resouce = IncomingPhoneNumberResource.Fetch(settings.TwilioPhoneSid);
+			if(settings.OtpEnabled) {
+				this.m_resouce = IncomingPhoneNumberResource.Fetch(settings.TwilioPhoneSid);
+			}
 		}
 
 		public static void Init(string account, string auth)

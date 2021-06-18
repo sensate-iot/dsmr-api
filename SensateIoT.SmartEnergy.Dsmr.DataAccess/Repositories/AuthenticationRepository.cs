@@ -67,10 +67,9 @@ namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories
 				Devices = devices.Select(x => new Device {
 					Timestamp = x.Timestamp,
 					Enabled = x.Enabled,
-					EnvironmentSensorId = x.EnvironmentSensorId,
-					GasSensorId = x.GasSensorId,
+					HasEnvironmentSensor = x.EnvironmentSensorId != null,
+					HasGasSensor = x.GasSensorId != null,
 					Id = x.Id,
-					PowerSensorId = x.PowerSensorId,
 					ServiceName = x.ServiceName
 				})
 			};

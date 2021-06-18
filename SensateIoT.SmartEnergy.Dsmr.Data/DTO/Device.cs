@@ -11,12 +11,10 @@ namespace SensateIoT.SmartEnergy.Dsmr.Data.DTO
 		public string ServiceName { get; set; }
 		[JsonProperty("enabled")]
 		public bool Enabled { get; set; }
-		[JsonIgnore]
-		public string PowerSensorId { get; set; }
-		[JsonIgnore]
-		public string GasSensorId { get; set; }
-		[JsonIgnore]
-		public string EnvironmentSensorId { get; set; }
+		[JsonProperty("hasEnvironmentSensor")]
+		public bool HasEnvironmentSensor { get; set; }
+		[JsonProperty("hasGasSensor")]
+		public bool HasGasSensor { get; set; }
 		[JsonProperty("timestamp")]
 		public DateTime Timestamp { get; set; }
 	}

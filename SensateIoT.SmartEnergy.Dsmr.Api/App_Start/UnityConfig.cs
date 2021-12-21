@@ -4,7 +4,7 @@ using SensateIoT.SmartEnergy.Dsmr.Api.Adapters;
 using SensateIoT.SmartEnergy.Dsmr.Data.Settings;
 using SensateIoT.SmartEnergy.Dsmr.DataAccess.Abstract;
 using SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories;
-
+using SensateIoT.SmartEnergy.Dsmr.DataAccess.Services;
 using Unity;
 using Unity.Lifetime;
 using Unity.WebApi;
@@ -21,6 +21,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api
 			initializeTwilio(config);
 
 			container.RegisterInstance(config);
+			container.RegisterType<IDeviceService, DeviceService>(new HierarchicalLifetimeManager());
 			container.RegisterType<IDeviceRepository, DeviceRepository>(new HierarchicalLifetimeManager());
 			container.RegisterType<IOlapRepository, OlapRepository>(new HierarchicalLifetimeManager());
 			container.RegisterType<IAuthenticationRepository, AuthenticationRepository>(new HierarchicalLifetimeManager());

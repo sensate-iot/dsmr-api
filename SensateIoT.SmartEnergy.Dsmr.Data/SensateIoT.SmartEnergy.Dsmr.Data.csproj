@@ -46,13 +46,17 @@
   <ItemGroup>
     <Compile Include="DTO\DataPoint.cs" />
     <Compile Include="DTO\Device.cs" />
+    <Compile Include="DTO\DeviceCapability.cs" />
     <Compile Include="DTO\EnergyDataPoint.cs" />
+    <Compile Include="DTO\EnergyHourlyAggregate.cs" />
     <Compile Include="DTO\EnvironmentDataPoint.cs" />
     <Compile Include="DTO\Granularity.cs" />
     <Compile Include="DTO\GroupedPowerData.cs" />
     <Compile Include="DTO\LoginResult.cs" />
     <Compile Include="DTO\User.cs" />
     <Compile Include="Models\Device.cs" />
+    <Compile Include="Models\DeviceCapability.cs" />
+    <Compile Include="Models\EnergyHourlyAggregate.cs" />
     <Compile Include="Models\EnergyUsageData.cs" />
     <Compile Include="Models\GroupedPowerData.cs" />
     <Compile Include="Models\OtpToken.cs" />

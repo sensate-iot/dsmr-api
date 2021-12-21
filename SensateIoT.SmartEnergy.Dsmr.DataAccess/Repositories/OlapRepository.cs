@@ -6,13 +6,16 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using JetBrains.Annotations;
+
 using SensateIoT.SmartEnergy.Dsmr.Data.DTO;
 using SensateIoT.SmartEnergy.Dsmr.Data.Models;
 using SensateIoT.SmartEnergy.Dsmr.Data.Settings;
 using SensateIoT.SmartEnergy.Dsmr.DataAccess.Abstract;
 
 using DataPoint = SensateIoT.SmartEnergy.Dsmr.Data.Models.DataPoint;
+using DeviceCapability = SensateIoT.SmartEnergy.Dsmr.Data.DTO.DeviceCapability;
 using EnergyDataPoint = SensateIoT.SmartEnergy.Dsmr.Data.DTO.EnergyDataPoint;
+using EnergyHourlyAggregate = SensateIoT.SmartEnergy.Dsmr.Data.DTO.EnergyHourlyAggregate;
 using EnvironmentDataPoint = SensateIoT.SmartEnergy.Dsmr.Data.DTO.EnvironmentDataPoint;
 using GroupedPowerData = SensateIoT.SmartEnergy.Dsmr.Data.DTO.GroupedPowerData;
 using WeeklyHigh = SensateIoT.SmartEnergy.Dsmr.Data.Models.WeeklyHigh;
@@ -29,6 +32,8 @@ namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories
 		private const string DsmrApi_SelectDataPoints = "DsmrApi_SelectDataPoints";
 		private const string DsmrApi_SelectPowerDataByHour = "DsmrApi_SelectPowerDataByHour";
 		private const string DsmrApi_SelectEnergyDataBetween = "DsmrApi_SelectEnergyDataBetween";
+		private const string DsmrApi_ComputeDeviceCapabilities = "DsmrApi_ComputeDeviceCapabilities";
+		private const string DsmrApi_SelectAverageEnergyDataPerHour = "DsmrApi_SelectAverageEnergyDataPerHour";
 
 		private const string DsmrApi_SelectPowerDailyAverages = "DsmrApi_SelectPowerDailyAverages";
 		private const string DsmrApi_SelectEnvironmentDailyAverages = "DsmrApi_SelectEnvironmentDailyAverages";
@@ -191,6 +196,43 @@ namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories
 				Temperature = x.Temperature,
 				Timestamp = x.Timestamp
 			});
+		}
+
+		public async Task<DeviceCapability> LookupDeviceCapabilities(int sensorId, CancellationToken ct)
+		{
+			var data = await this.QuerySingleAsync<Data.Models.DeviceCapability>(DsmrApi_ComputeDeviceCapabilities, ct,
+			                                                   "@sensorId", sensorId).ConfigureAwait(false);
+
+			if(data == null) {
+				return null;
+			}
+
+			return new DeviceCapability {
+				HasGasMeter = data.HasGasMeter ?? false,
+				HasSolarCells = data.HasSolarCells
+			};
+		}
+
+		public async Task<IEnumerable<EnergyHourlyAggregate>> LookupHourlyEnergyAggregates(int sensorId, CancellationToken ct)
+		{
+			var data = await this.QueryAsync<Data.Models.EnergyHourlyAggregate>(DsmrApi_SelectAverageEnergyDataPerHour, ct,
+			                                                   "@sensorId", sensorId).ConfigureAwait(false);
+			return data?.Select(x => new EnergyHourlyAggregate {
+				AverageGasFlow = x.AverageGasFlow,
+				AveragePowerUsage = x.AveragePowerUsage,
+				Hour = createTimestampAtHour(x.Hour)
+			});
+		}
+
+		private static DateTime createTimestampAtHour(int hour)
+		{
+			return new DateTime(DateTime.UtcNow.Year,
+			                    DateTime.UtcNow.Month,
+			                    DateTime.UtcNow.Day, hour,
+			                    0,
+			                    0,
+			                    0,
+			                    DateTimeKind.Utc);
 		}
 
 		private static DateTime createTimestamp(DateTime timestamp, int hour)

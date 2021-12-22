@@ -180,6 +180,13 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 			return this.Ok(response);
 		}
 
+		/// <summary>
+		/// Get the average energy usage over the given period for a given sensor.
+		/// </summary>
+		/// <param name="sensorId">Sensor to compute averages for.</param>
+		/// <param name="start">Start of period.</param>
+		/// <param name="end">End of period.</param>
+		/// <returns>List of average energy consumption between <paramref name="start"/> and <paramref name="end"/>.</returns>
 	    [HttpGet]
 		[Route("energy/{sensorId}/average")]
 		[ProductTokenAuthentication, ExceptionHandling]

@@ -39,7 +39,10 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 		        return;
 	        }
 
-	        response.AddError(error);
+	        if(error != null) {
+				response.AddError(error);
+	        }
+
 	        response.AddError($"Device {sensorId} not authorized for the current user.");
 
 	        var msg = new HttpResponseMessage(HttpStatusCode.Unauthorized) {

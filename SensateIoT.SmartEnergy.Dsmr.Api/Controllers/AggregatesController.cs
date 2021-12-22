@@ -17,6 +17,7 @@ using SensateIoT.SmartEnergy.Dsmr.DataAccess.Abstract;
 
 using DataPoint = SensateIoT.SmartEnergy.Dsmr.Data.DTO.DataPoint;
 using EnergyDataPoint = SensateIoT.SmartEnergy.Dsmr.Data.DTO.EnergyDataPoint;
+using EnergyHourlyAggregate = SensateIoT.SmartEnergy.Dsmr.Data.DTO.EnergyHourlyAggregate;
 using EnvironmentDataPoint = SensateIoT.SmartEnergy.Dsmr.Data.DTO.EnvironmentDataPoint;
 using GroupedPowerData = SensateIoT.SmartEnergy.Dsmr.Data.DTO.GroupedPowerData;
 using WeeklyHigh = SensateIoT.SmartEnergy.Dsmr.Data.DTO.WeeklyHigh;
@@ -179,6 +180,30 @@ namespace SensateIoT.SmartEnergy.Dsmr.Api.Controllers
 			return this.Ok(response);
 		}
 
+	    [HttpGet]
+		[Route("energy/{sensorId}/average")]
+		[ProductTokenAuthentication, ExceptionHandling]
+		[SwaggerResponse(HttpStatusCode.OK, "Result response.", typeof(Response<IEnumerable<EnergyHourlyAggregate>>))]
+		[SwaggerResponse(HttpStatusCode.Unauthorized, "Unauthorized response.", typeof(Response<object>))]
+		public async Task<IHttpActionResult> GetHourlyEnergyAverages(int sensorId, DateTime? start = null, DateTime? end = null)
+		{
+			this.ThrowIfDeviceUnauthorized(sensorId);
+
+			if(start == null) {
+				start = DateTime.UtcNow.AddMonths(-1);
+			}
+
+			if(end == null) {
+				end = DateTime.UtcNow;
+			}
+
+			var response = new Response<IEnumerable<EnergyHourlyAggregate>>();
+			var data = await this.m_olap.LookupHourlyEnergyAggregates(sensorId, start.Value, end.Value, CancellationToken.None)
+				.ConfigureAwait(false);
+
+			response.Data = data;
+			return this.Ok(response);
+		}
 
 		/// <summary>
 		/// Get the highest measurements in the last week.

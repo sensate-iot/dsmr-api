@@ -213,13 +213,16 @@ namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories
 			};
 		}
 
-		public async Task<IEnumerable<EnergyHourlyAggregate>> LookupHourlyEnergyAggregates(int sensorId, CancellationToken ct)
+		public async Task<IEnumerable<EnergyHourlyAggregate>> LookupHourlyEnergyAggregates(int sensorId, DateTime start, DateTime end, CancellationToken ct)
 		{
 			var data = await this.QueryAsync<Data.Models.EnergyHourlyAggregate>(DsmrApi_SelectAverageEnergyDataPerHour, ct,
-			                                                   "@sensorId", sensorId).ConfigureAwait(false);
+			                                                   "@sensorId", sensorId,
+																         "@start", start,
+																         "@end", end).ConfigureAwait(false);
 			return data?.Select(x => new EnergyHourlyAggregate {
 				AverageGasFlow = x.AverageGasFlow,
 				AveragePowerUsage = x.AveragePowerUsage,
+				AveragePowerProduction = x.AveragePowerProduction,
 				Hour = createTimestampAtHour(x.Hour)
 			});
 		}
@@ -228,7 +231,8 @@ namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Repositories
 		{
 			return new DateTime(DateTime.UtcNow.Year,
 			                    DateTime.UtcNow.Month,
-			                    DateTime.UtcNow.Day, hour,
+			                    DateTime.UtcNow.Day,
+			                    hour,
 			                    0,
 			                    0,
 			                    0,

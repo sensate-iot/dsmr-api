@@ -27,6 +27,6 @@ namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Abstract
 		Task<WeeklyHigh> LookupWeeklyHighAsync(int sensorId, CancellationToken ct);
 		Task<IEnumerable<DataPoint>> LookupDataPointsAsync(int sensorId, DateTime start, DateTime end, CancellationToken ct);
 		Task<DeviceCapability> LookupDeviceCapabilities(int sensorId, CancellationToken ct);
-		Task<IEnumerable<EnergyHourlyAggregate>> LookupHourlyEnergyAggregates(int sensorId, CancellationToken ct);
+		Task<IEnumerable<EnergyHourlyAggregate>> LookupHourlyEnergyAggregates(int sensorId, DateTime start, DateTime end, CancellationToken ct);
 	}
 }

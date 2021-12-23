@@ -15,6 +15,8 @@ namespace SensateIoT.SmartEnergy.Dsmr.Data.DTO
 		public bool HasEnvironmentSensor { get; set; }
 		[JsonProperty("hasGasSensor")]
 		public bool HasGasSensor { get; set; }
+		[JsonProperty("hasSolarCells")]
+		public bool HasSolarCells { get; set; }
 		[JsonProperty("timestamp")]
 		public DateTime Timestamp { get; set; }
 	}

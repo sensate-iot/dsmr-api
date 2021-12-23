@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using SensateIoT.SmartEnergy.Dsmr.Data.Models;
 
 using DataPoint = SensateIoT.SmartEnergy.Dsmr.Data.DTO.DataPoint;
+using DeviceCapability = SensateIoT.SmartEnergy.Dsmr.Data.DTO.DeviceCapability;
 using EnergyDataPoint = SensateIoT.SmartEnergy.Dsmr.Data.DTO.EnergyDataPoint;
+using EnergyHourlyAggregate = SensateIoT.SmartEnergy.Dsmr.Data.DTO.EnergyHourlyAggregate;
 using EnvironmentDataPoint = SensateIoT.SmartEnergy.Dsmr.Data.DTO.EnvironmentDataPoint;
 using GroupedPowerData = SensateIoT.SmartEnergy.Dsmr.Data.DTO.GroupedPowerData;
 using WeeklyHigh = SensateIoT.SmartEnergy.Dsmr.Data.DTO.WeeklyHigh;
@@ -24,5 +26,7 @@ namespace SensateIoT.SmartEnergy.Dsmr.DataAccess.Abstract
 		Task<DataPoint> LookupLastDataPointAsync(int sensorId, CancellationToken ct);
 		Task<WeeklyHigh> LookupWeeklyHighAsync(int sensorId, CancellationToken ct);
 		Task<IEnumerable<DataPoint>> LookupDataPointsAsync(int sensorId, DateTime start, DateTime end, CancellationToken ct);
+		Task<DeviceCapability> LookupDeviceCapabilities(int sensorId, CancellationToken ct);
+		Task<IEnumerable<EnergyHourlyAggregate>> LookupHourlyEnergyAggregates(int sensorId, DateTime start, DateTime end, CancellationToken ct);
 	}
 }

@@ -2,7 +2,6 @@
 using System.Web.Http;
 
 using SensateIoT.SmartEnergy.Dsmr.Api.Middleware;
-using SensateIoT.SmartEnergy.Dsmr.DataAccess.Abstract;
 
 namespace SensateIoT.SmartEnergy.Dsmr.Api
 {
